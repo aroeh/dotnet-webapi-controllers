@@ -1,0 +1,10 @@
+@baseAddress = https://localhost:7195
+
+### See if the API is up and running
+OPTIONS {{baseAddress}}/_health
+Accept: application/json
+
+
+### Call the Health Check endpoint
+GET {{baseAddress}}/_health
+Accept: application/json

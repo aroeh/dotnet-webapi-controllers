@@ -1,0 +1,40 @@
+version: '3.9'
+
+networks:
+  default:
+
+services:
+  cache:
+    image: redis
+    container_name: redis-cache
+    networks:
+      - default
+    restart: always
+    ports:
+      - 6379:6379
+
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    restart: always
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=AzureDiamond
+      - MONGO_INITDB_ROOT_PASSWORD=hunter2
+  
+  webapi:
+    image: ${DOCKER_REGISTRY-}controllerapi
+    container_name: web-api
+    networks:
+      - default
+    build:
+      context: ./WebApiControllers
+      dockerfile: Dockerfile
+    ports:
+      - 5112:80
+    depends_on:
+      - mongodb
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - mongoConn=mongodb://AzureDiamond:hunter2@mongodb

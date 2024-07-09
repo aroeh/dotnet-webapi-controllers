@@ -1,0 +1,73 @@
+@baseAddress = https://localhost:7195
+@apiVersion = v2
+@controllerAddress = {{baseAddress}}/restuarant/{{apiVersion}}
+@accept = application/json
+@contentType = application/json
+
+
+### GET - Get All Restuarants
+GET {{controllerAddress}}
+Accept: {{accept}}
+
+
+### POST - Find Restuarants by search criteria
+POST {{controllerAddress}}/find
+Accept: {{accept}}
+Content-Type: {{contentType}}
+
+{
+    "search": {
+        "name": "Test",
+        "cuisine": "Test"
+    }
+}
+
+
+### GET - Get Restuarant by id
+@id = 123456
+GET {{controllerAddress}}/{{id}}
+Accept: {{accept}}
+
+
+### POST - Add a new Restuarant
+POST {{controllerAddress}}
+Accept: {{accept}}
+Content-Type: {{contentType}}
+
+{
+    "restuarant": {
+        "name": "Test",
+        "cuisineType": "Test",
+        "website": "https://www.google.com",
+        "phone": "1112223333",
+        "address": {
+            "street": "123 Test Street",
+            "city": "Somewhere",
+            "state": "KY",
+            "zipCode": "12345",
+            "country": "United States"
+        }
+    }
+}
+
+
+### PUT - Update an existing Restuarant
+PUT {{controllerAddress}}
+Accept: {{accept}}
+Content-Type: {{contentType}}
+
+{
+    "restuarant": {
+        "name": "Test",
+        "cuisineType": "Test",
+        "website": "https://www.google.com",
+        "phone": "1112223333",
+        "address": {
+            "street": "123 Test Street",
+            "city": "Somewhere",
+            "state": "KY",
+            "zipCode": "12345",
+            "country": "United States"
+        }
+    }
+}
