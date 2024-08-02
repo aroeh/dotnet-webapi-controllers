@@ -1,16 +1,11 @@
-@baseAddress = https://localhost:7195
 @apiVersion = v2
 @controllerAddress = {{baseAddress}}/restuarant/{{apiVersion}}
-@accept = application/json
-@contentType = application/json
 
 
-### GET - Get All Restuarants
 GET {{controllerAddress}}
-Accept: {{accept}}
+### GET - Get All Restuarants
 
 
-### POST - Find Restuarants by search criteria
 POST {{controllerAddress}}/find
 Accept: {{accept}}
 Content-Type: {{contentType}}
@@ -21,15 +16,16 @@ Content-Type: {{contentType}}
         "cuisine": "Test"
     }
 }
+### POST - Find Restuarants by search criteria
 
 
-### GET - Get Restuarant by id
 @id = 123456
 GET {{controllerAddress}}/{{id}}
 Accept: {{accept}}
+### GET - Get Restuarant by id
 
 
-### POST - Add a new Restuarant
+
 POST {{controllerAddress}}
 Accept: {{accept}}
 Content-Type: {{contentType}}
@@ -49,9 +45,10 @@ Content-Type: {{contentType}}
         }
     }
 }
+### POST - Add a new Restuarant
 
 
-### PUT - Update an existing Restuarant
+
 PUT {{controllerAddress}}
 Accept: {{accept}}
 Content-Type: {{contentType}}
@@ -71,3 +68,4 @@ Content-Type: {{contentType}}
         }
     }
 }
+### PUT - Update an existing Restuarant

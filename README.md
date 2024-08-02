@@ -8,6 +8,7 @@ This project is intended to be used for educational and reference purposes and w
 - API Versioning by URL Path
 - Dependency Injection
 - HSTS Security Headers
+- using http files and external variables
 
 # Dependencies
 - MongoDB
@@ -37,3 +38,4 @@ View the MongoService.cs file and review the constructor.  Identify how you will
 - [Output Caching](https://learn.microsoft.com/en-us/aspnet/core/performance/caching/output?view=aspnetcore-8.0)
 - [HealthChecks](https://learn.microsoft.com/en-us/aspnet/core/host-and-deploy/health-checks?view=aspnetcore-8.0)
 - [Metrics](https://learn.microsoft.com/en-us/aspnet/core/log-mon/metrics/metrics?view=aspnetcore-8.0)
+- [HTTP File Secrets](https://devblogs.microsoft.com/visualstudio/safely-use-secrets-in-http-requests-in-visual-studio-2022/)

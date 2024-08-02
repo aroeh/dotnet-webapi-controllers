@@ -1,0 +1,7 @@
+{
+  "local": {
+    "baseAddress": "https://localhost:7195",
+    "accept": "application/json",
+    "contentType": "application/json"
+  }
+}

@@ -13,6 +13,12 @@ namespace WebApiControllers
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Add and include additional app settings files
+            // by default
+            // builder.Configuration
+            //     .AddJsonFile("appsettings.json")
+            //     .AddJsonFile("appsettings.Development.json");
+
             // Add services to the container.
 
             // register a custom exception handler middleware and problem details usage in the pipeline
