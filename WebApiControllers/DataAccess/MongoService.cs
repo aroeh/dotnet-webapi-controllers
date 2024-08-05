@@ -31,12 +31,16 @@ namespace WebApiControllers.DataAccess
             // Environment Variable - uncomment this line if passing in the connection string via an env variable
             // probably most commonly used with local containers for simplicity.  Ideally, this will pulled from secrets
 
-            logger.LogInformation("MongoDB Connection String: {connection}", Environment.GetEnvironmentVariable(DataAccessConstants.MongoConn));
+            logger.LogInformation("Retrieving MongoDB Connection string from ENV Variables");
 
+            logger.LogInformation("Configuring MongoDB Client");
             Client = new(Environment.GetEnvironmentVariable(DataAccessConstants.MongoConn));
 
             // configure the client and set a database name ideally from a constants file
+            logger.LogInformation("Configuring MongoDB Database");
             Database = Client.GetDatabase(DataAccessConstants.MongoDatabase);
+
+            logger.LogInformation("MongoDB Connection established and service ready");
         }
     }
 }
