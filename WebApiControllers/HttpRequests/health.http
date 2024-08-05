@@ -6,3 +6,8 @@ Accept: application/json
 GET {{baseAddress}}/_health
 Accept: application/json
 ### Call the Health Check endpoint
+
+
+GET {{baseAddress}}/food/v2
+Accept: application/json
+### Call the Health Check endpoint

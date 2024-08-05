@@ -1,22 +1,22 @@
-version: '3.9'
-
 networks:
-  default:
+  backend:
 
 services:
   cache:
     image: redis
     container_name: redis-cache
     networks:
-      - default
+      - backend
     restart: always
     ports:
       - 6379:6379
 
-  mongodb:
+  mongo:
     image: mongo
-    container_name: mongodb
+    container_name: mongo-data
     restart: always
+    networks:
+      - backend
     ports:
       - 27017:27017
     environment:
@@ -27,14 +27,15 @@ services:
     image: ${DOCKER_REGISTRY-}controllerapi
     container_name: web-api
     networks:
-      - default
+      - backend
     build:
       context: ./WebApiControllers
       dockerfile: Dockerfile
     ports:
       - 5112:80
     depends_on:
-      - mongodb
+      - mongo
     environment:
+      - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Development
-      - mongoConn=mongodb://AzureDiamond:hunter2@mongodb
+      - MONGODB_CONN=mongodb://AzureDiamond:hunter2@mongo:27017

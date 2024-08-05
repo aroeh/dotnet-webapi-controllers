@@ -18,6 +18,8 @@ This project has a dependency on MongoDB.  You can either use a deployed MongoDB
 
 View the MongoService.cs file and review the constructor.  Identify how you will be retrieving your connection string and either comment/uncomment the lines present or alter the code.
 
+This project is locally setup to use a MongoDB Container.  The connection string is setup both in the docker-compose.yaml as well as in the launchSettings.json profiles via Environment Variables.  If you choose to use secrets, you will need to update the code and remove the Environment variables and change the MongoService to use the secrets location.
+
 ## MongoDB Atlas
 1. Signup for MongoDB if you do not already have an account - Use the free tier of the service
 2. Create a new project and database

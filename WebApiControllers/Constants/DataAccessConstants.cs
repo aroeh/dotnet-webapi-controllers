@@ -3,7 +3,7 @@
     public static class DataAccessConstants
     {
         // key name to point to connection string secret
-        public const string MongoConn = "mongoConn";
+        public const string MongoConn = "MONGODB_CONN";
 
         // database name to connect to
         public const string MongoDatabase = "samples";
