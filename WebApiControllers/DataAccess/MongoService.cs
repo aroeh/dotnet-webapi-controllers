@@ -22,11 +22,11 @@ namespace WebApiControllers.DataAccess
             // for this project depending on your resources available - you will need to setup the connection string
             
             // Local secrets - uncomment this line if using local secrets config to store the connection string
-            //Client = new(config.GetValue<string>(DataAccessConstants.MongoConn));
+            Client = new(config.GetValue<string>(DataAccessConstants.MongoConn));
 
             // Environment Variable - uncomment this line if passing in the connection string via an env variable
             // probably most commonly used with local containers for simplicity.  Ideally, this will pulled from secrets
-            Client = new(Environment.GetEnvironmentVariable(DataAccessConstants.MongoConn));
+            // Client = new(Environment.GetEnvironmentVariable(DataAccessConstants.MongoConn));
 
             // configure the client and set a database name ideally from a constants file
             Database = Client.GetDatabase(DataAccessConstants.MongoDatabase);

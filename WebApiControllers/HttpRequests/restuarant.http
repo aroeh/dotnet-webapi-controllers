@@ -1,3 +1,4 @@
+@appJson = application/json
 @apiVersion = v2
 @controllerAddress = {{baseAddress}}/restuarant/{{apiVersion}}
 
@@ -7,42 +8,38 @@ GET {{controllerAddress}}
 
 
 POST {{controllerAddress}}/find
-Accept: {{accept}}
-Content-Type: {{contentType}}
+Accept: {{appJson}}
+Content-Type: {{appJson}}
 
 {
-    "search": {
-        "name": "Test",
-        "cuisine": "Test"
-    }
+    "name": "Test",
+    "cuisine": "Test"
 }
+
 ### POST - Find Restuarants by search criteria
 
 
-@id = 123456
+@id = 66b03c2009119f72a45f9c4f
 GET {{controllerAddress}}/{{id}}
-Accept: {{accept}}
 ### GET - Get Restuarant by id
 
 
 
-POST {{controllerAddress}}
-Accept: {{accept}}
-Content-Type: {{contentType}}
+POST {{baseAddress}}/restuarant/{{apiVersion}}
+Accept: {{appJson}}
+Content-Type: {{appJson}}
 
 {
-    "restuarant": {
-        "name": "Test",
-        "cuisineType": "Test",
-        "website": "https://www.google.com",
-        "phone": "1112223333",
-        "address": {
-            "street": "123 Test Street",
-            "city": "Somewhere",
-            "state": "KY",
-            "zipCode": "12345",
-            "country": "United States"
-        }
+    "name": "Test",
+    "cuisineType": "Test",
+    "website": "https://www.google.com/",
+    "phone": "1112223333",
+    "address": {
+        "street": "123 Test Street",
+        "city": "Somewhere",
+        "state": "KY",
+        "zipCode": "12345",
+        "country": "United States"
     }
 }
 ### POST - Add a new Restuarant
@@ -50,22 +47,20 @@ Content-Type: {{contentType}}
 
 
 PUT {{controllerAddress}}
-Accept: {{accept}}
-Content-Type: {{contentType}}
+Accept: {{appJson}}
+Content-Type: {{appJson}}
 
 {
-    "restuarant": {
-        "name": "Test",
-        "cuisineType": "Test",
-        "website": "https://www.google.com",
-        "phone": "1112223333",
-        "address": {
-            "street": "123 Test Street",
-            "city": "Somewhere",
-            "state": "KY",
-            "zipCode": "12345",
-            "country": "United States"
-        }
+    "name": "Test",
+    "cuisineType": "Test",
+    "website": "https://www.google.com",
+    "phone": "1112223333",
+    "address": {
+        "street": "123 Test Street",
+        "city": "Somewhere",
+        "state": "KY",
+        "zipCode": "12345",
+        "country": "United States"
     }
 }
 ### PUT - Update an existing Restuarant

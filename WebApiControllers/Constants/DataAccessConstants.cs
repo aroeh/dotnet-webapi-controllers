@@ -6,7 +6,7 @@
         public const string MongoConn = "mongoConn";
 
         // database name to connect to
-        public const string MongoDatabase = "recreation";
+        public const string MongoDatabase = "samples";
 
         // name of the collection containing records
         public const string MongoCollection = "restuarants";

@@ -23,7 +23,6 @@ namespace WebApiControllers.Models
         public string CuisineType { get; set; } = string.Empty;
 
         [BsonElement("website")]
-        [Url]
         public Uri? Website { get; set; }
 
         [BsonElement("phone")]
