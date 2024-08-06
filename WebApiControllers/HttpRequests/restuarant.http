@@ -12,10 +12,9 @@ Accept: {{appJson}}
 Content-Type: {{appJson}}
 
 {
-    "name": "Test",
-    "cuisine": "Test"
+  "name": "Test",
+  "cuisine": "Test"
 }
-
 ### POST - Find Restuarants by search criteria
 
 
