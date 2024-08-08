@@ -45,7 +45,7 @@ Content-Type: {{appJson}}
 
 
 
-PUT {{controllerAddress}}
+PUT {{baseAddress}}/restuarant/{{apiVersion}}
 Accept: {{appJson}}
 Content-Type: {{appJson}}
 

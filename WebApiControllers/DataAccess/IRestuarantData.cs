@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver;
-using WebApiControllers.Models;
+﻿using WebApiControllers.Models;
 
 namespace WebApiControllers.DataAccess
 {
@@ -39,6 +38,6 @@ namespace WebApiControllers.DataAccess
         /// </summary>
         /// <param name="rest"></param>
         /// <returns>MongoDb replace results for the update operation</returns>
-        Task<ReplaceOneResult> UpdateRestuarant(Restuarant rest);
+        Task<MongoUpdateResult> UpdateRestuarant(Restuarant rest);
     }
 }

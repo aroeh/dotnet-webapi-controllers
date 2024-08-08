@@ -1,5 +1,4 @@
-﻿using MongoDB.Driver;
-using WebApiControllers.DataAccess;
+﻿using WebApiControllers.DataAccess;
 using WebApiControllers.Models;
 
 namespace WebApiControllers.Repos
@@ -86,7 +85,7 @@ namespace WebApiControllers.Repos
         public async Task<bool> UpdateRestuarant(Restuarant rest)
         {
             logger.LogInformation("Updating restuarant");
-            ReplaceOneResult result = await restuarantData.UpdateRestuarant(rest);
+            MongoUpdateResult result = await restuarantData.UpdateRestuarant(rest);
 
             logger.LogInformation("Checking update operation result");
             return (result.IsAcknowledged && result.ModifiedCount > 0);

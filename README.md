@@ -10,9 +10,12 @@ This project is intended to be used for educational and reference purposes and w
 - HSTS Security Headers
 - using http files and external variables
 - Docker container and Docker Compose
-- XUnit tests - including global usings
-- NUnit tests - including global usings
+- Utilizing global usings in unit tests
+- XUnit tests - tests on all classes
+- NUnit tests - only on controllers to show syntax
+- MSTest tests - only on controllers to show syntax
 - Collecting Coverage Locally without needing Visual Studio Enterprise
+- TODO: Open API Documentation on endpoints
 
 # Dependencies
 - MongoDB
@@ -180,3 +183,5 @@ reportgenerator -reports:"TestResults\<GUID>\coverage.cobertura.xml" -targetdir:
 - [Metrics](https://learn.microsoft.com/en-us/aspnet/core/log-mon/metrics/metrics?view=aspnetcore-8.0)
 - [HTTP File Secrets](https://devblogs.microsoft.com/visualstudio/safely-use-secrets-in-http-requests-in-visual-studio-2022/)
 - [Docker Compose CLI](https://docs.docker.com/compose/reference/)
+- [Docker Compose Repo](https://github.com/docker/awesome-compose/tree/master)
+- [Dotnet CLI](https://learn.microsoft.com/en-us/dotnet/core/tools/)

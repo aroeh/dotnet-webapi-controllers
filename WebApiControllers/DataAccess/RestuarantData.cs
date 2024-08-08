@@ -7,8 +7,6 @@ namespace WebApiControllers.DataAccess
     // class setup using a primary constructor
     public class RestuarantData(ILogger<RestuarantData> log, IMongoService mongo) : IRestuarantData
     {
-        private readonly IMongoCollection<Restuarant> collection = mongo.Database.GetCollection<Restuarant>(DataAccessConstants.MongoCollection);
-
         private readonly ILogger<RestuarantData> logger = log;
 
 
@@ -18,8 +16,11 @@ namespace WebApiControllers.DataAccess
         /// <returns>Collection of available restuarant records.  Returns empty list if there are no records</returns>
         public async Task<List<Restuarant>> GetAllRestuarants()
         {
+            FilterDefinitionBuilder<Restuarant> builder = Builders<Restuarant>.Filter;
+            var filter = builder.Where(d => true);
+
             logger.LogInformation("Finding all restuarants");
-            return await collection.Find(d => true).ToListAsync();
+            return await mongo.FindMany<Restuarant>(DataAccessConstants.MongoCollection, filter);
         }
 
         /// <summary>
@@ -31,8 +32,11 @@ namespace WebApiControllers.DataAccess
         /// <returns>Collection of available restuarant records.  Returns empty list if there are no records found matching criteria</returns>
         public async Task<List<Restuarant>> FindRestuarants(string name, string cuisine)
         {
+            FilterDefinitionBuilder<Restuarant> builder = Builders<Restuarant>.Filter;
+            var filter = builder.Where(d => d.Name.Contains(name) && d.CuisineType == cuisine);
+
             logger.LogInformation("Finding restuarants by name and cuisine type");
-            return await collection.Find(d => d.Name.Contains(name) && d.CuisineType == cuisine).ToListAsync();
+            return await mongo.FindMany<Restuarant>(DataAccessConstants.MongoCollection, filter);
         }
 
         /// <summary>
@@ -42,8 +46,11 @@ namespace WebApiControllers.DataAccess
         /// <returns>Restuarant record if found.  Returns new Restuarant if not found</returns>
         public async Task<Restuarant> GetRestuarant(string id)
         {
+            FilterDefinitionBuilder<Restuarant> builder = Builders<Restuarant>.Filter;
+            var filter = builder.Eq(d => d.Id, id);
+
             logger.LogInformation("Finding restuarant by id");
-            return await collection.Find(d => d.Id == id).FirstOrDefaultAsync();
+            return await mongo.FindOne<Restuarant>(DataAccessConstants.MongoCollection, filter);
         }
 
         /// <summary>
@@ -53,10 +60,10 @@ namespace WebApiControllers.DataAccess
         /// <returns>Restuarant object updated with the new id</returns>
         public async Task<Restuarant> InsertRestuarant(Restuarant rest)
         {
-            logger.LogInformation("inserting data");
-            await collection.InsertOneAsync(rest);
+            logger.LogInformation("Adding new restuarant");
+            Restuarant newRestuarant = await mongo.InsertOne<Restuarant>(DataAccessConstants.MongoCollection, rest);
 
-            return rest;
+            return newRestuarant;
         }
 
         /// <summary>
@@ -64,13 +71,13 @@ namespace WebApiControllers.DataAccess
         /// </summary>
         /// <param name="rest"></param>
         /// <returns>MongoDb replace results for the update operation</returns>
-        public async Task<ReplaceOneResult> UpdateRestuarant(Restuarant rest)
+        public async Task<MongoUpdateResult> UpdateRestuarant(Restuarant rest)
         {
-            logger.LogInformation("starting replace operation");
-            ReplaceOneResult result = await collection.ReplaceOneAsync(d => d.Id == rest.Id, rest);
+            FilterDefinitionBuilder<Restuarant> builder = Builders<Restuarant>.Filter;
+            var filter = builder.Eq(d => d.Id, rest.Id);
 
-            logger.LogInformation("operation completed...returning result");
-            return result;
+            logger.LogInformation("replacing restuarant document");
+            return await mongo.ReplaceOne<Restuarant>(DataAccessConstants.MongoCollection, filter, rest);
         }
     }
 }
