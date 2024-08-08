@@ -8,6 +8,8 @@ This project is intended to be used for educational and reference purposes and w
 - API Versioning by URL Path
 - Dependency Injection
 - HSTS Security Headers
+- Typed HttpClient via a wrapper class using generics
+- Named HttpClientFactory via a wrapper class using generics
 - using http files and external variables
 - Docker container and Docker Compose
 - Utilizing global usings in unit tests
@@ -185,3 +187,4 @@ reportgenerator -reports:"TestResults\<GUID>\coverage.cobertura.xml" -targetdir:
 - [Docker Compose CLI](https://docs.docker.com/compose/reference/)
 - [Docker Compose Repo](https://github.com/docker/awesome-compose/tree/master)
 - [Dotnet CLI](https://learn.microsoft.com/en-us/dotnet/core/tools/)
+- [Http Client Factory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)

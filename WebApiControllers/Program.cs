@@ -2,6 +2,7 @@ using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using WebApiControllers.DataAccess;
 using WebApiControllers.Health;
+using WebApiControllers.HttpClientHelpers;
 using WebApiControllers.Middleware;
 using WebApiControllers.Repos;
 
@@ -61,6 +62,19 @@ namespace WebApiControllers
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+
+            // register http clients for the app
+            // add a typed HttpClient
+            builder.Services.AddHttpClient<HttpClientHelper>(c => c.BaseAddress = new Uri("http://localhost:5112"));
+
+            // add a named IHttpClientFactory
+            builder.Services.AddHttpClient("restuarantClient", client =>
+            {
+                client.BaseAddress = new Uri("http://localhost:5112");
+            });
+            builder.Services.AddTransient<HttpFactoryHelper>();
+
 
             // Add classes and interfaces for dependency injection
             // transient is being used here so new instances of classes are insantiated when needed in the request pipeline
