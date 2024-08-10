@@ -1,8 +1,3 @@
-OPTIONS {{baseAddress}}/_health
-Accept: application/json
-### See if the API is up and running
-
-
-GET {{baseAddress}}/_health
+GET {{baseAddress}}/health
 Accept: application/json
 ### Call the Health Check endpoint

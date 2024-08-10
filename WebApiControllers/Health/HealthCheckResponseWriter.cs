@@ -22,10 +22,8 @@ namespace WebApiControllers.Health
                 foreach (var healthReportEntry in healthReport.Entries)
                 {
                     jsonWriter.WriteStartObject(healthReportEntry.Key);
-                    jsonWriter.WriteString("status",
-                        healthReportEntry.Value.Status.ToString());
-                    jsonWriter.WriteString("description",
-                        healthReportEntry.Value.Description);
+                    jsonWriter.WriteString("status", healthReportEntry.Value.Status.ToString());
+                    jsonWriter.WriteString("description", healthReportEntry.Value.Description);
                     jsonWriter.WriteStartObject("data");
 
                     foreach (var item in healthReportEntry.Value.Data)
