@@ -1,4 +1,3 @@
-using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using WebApiControllers.DataAccess;
 using WebApiControllers.Health;
@@ -31,10 +30,8 @@ namespace WebApiControllers
             //    .AddMicrosoftIdentityWebApi(builder.Configuration.GetSection("AzureAd"));
 
             // add health checks to the app
-            // this is currently using a custom mongodb health check.
-            // we could use a built in one from libraries - comment out the custom health check and uncomment the line .AddMongoDb
+            // this is currently using a custom mongodb health check
             builder.Services.AddHealthChecks()
-                //.AddMongoDb("connection string goes here");
                 .AddCheck<CustomMongoDbHealthCheck>("Database");
 
             // setup API output cache policy to use on specified controllers
@@ -109,10 +106,10 @@ namespace WebApiControllers
 
             app.UseHttpsRedirection();
 
-            // using AspNetCore.HealthChecks.UI.Client to setup the response
-            app.MapHealthChecks("/_health", new HealthCheckOptions
+            // map the health check endpoint and setup a custom writer
+            app.MapHealthChecks("/health", new HealthCheckOptions
             {
-                ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+                ResponseWriter = HealthCheckResponseWriter.WriteCustomHealthCheckResponse
             });
 
             app.UseOutputCache();
