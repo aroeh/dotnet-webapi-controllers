@@ -1,6 +1,9 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
+using System.Text.Encodings.Web;
+using System.Text.Json;
+using WebApiControllers.Middleware;
 using WebApiControllers.Models;
 using WebApiControllers.Repos;
 
@@ -17,10 +20,25 @@ namespace WebApiControllers.Controllers.V2
     [ApiVersion("2.0")]
     [Produces("application/json")]
     [Route("[controller]/v{version:apiVersion}")]
-    public class RestuarantController(ILogger<RestuarantController> log, IRestuarantRepo repo) : ControllerBase
+    public class RestuarantController : ControllerBase
     {
-        private readonly ILogger<RestuarantController> logger = log;
-        private readonly IRestuarantRepo restuarantRepo = repo;
+        private readonly ILogger<RestuarantController> logger;
+        private readonly IRestuarantRepo restuarantRepo;
+
+        public RestuarantController(ILoggerFactory logFactory, IRestuarantRepo repo)
+        {
+            logFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddJsonConsole(options => 
+                    options.JsonWriterOptions = new JsonWriterOptions()
+                    {
+                        Indented = true,
+                        Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+                    });
+            });
+            logger = logFactory.CreateLogger<RestuarantController>();
+            restuarantRepo = repo;
+        }
 
         /// <summary>
         /// Get All Restuarants
@@ -30,7 +48,7 @@ namespace WebApiControllers.Controllers.V2
         [HttpGet]
         public async Task<IResult> Get()
         {
-            logger.LogInformation("Get all restuarants request received");
+            logger.GetAllRestuarants();
             List<Restuarant> restuarants = await restuarantRepo.GetAllRestuarants();
 
             if(restuarants == null || restuarants.Count == 0)
@@ -38,7 +56,7 @@ namespace WebApiControllers.Controllers.V2
                 return TypedResults.NotFound();
             }
 
-            logger.LogInformation("Get all restuarants request complete...returning results");
+            logger.GetAllRestuarantsComplete();
             return TypedResults.Ok(restuarants);
         }
 
@@ -49,7 +67,7 @@ namespace WebApiControllers.Controllers.V2
         [HttpPost("find")]
         public async Task<IResult> Find([FromBody] SearchCriteria search)
         {
-            logger.LogInformation("Find restuarants request received");
+            logger.FindRestuarants(JsonSerializer.Serialize(search));
             List<Restuarant> restuarants = await restuarantRepo.FindRestuarants(search.Name, search.Cuisine);
 
             if (restuarants == null || restuarants.Count == 0)
@@ -57,7 +75,7 @@ namespace WebApiControllers.Controllers.V2
                 return TypedResults.NotFound();
             }
 
-            logger.LogInformation("Find restuarants request complete...returning results");
+            logger.FindRestuarantsComplete();
             return TypedResults.Ok(restuarants);
         }
 
@@ -68,7 +86,7 @@ namespace WebApiControllers.Controllers.V2
         [HttpGet("{id}")]
         public async Task<IResult> Restuarant(string id)
         {
-            logger.LogInformation("Get restuarant request received");
+            logger.RestuarantById(id);
             Restuarant restuarant = await restuarantRepo.GetRestuarant(id);
 
             if(restuarant == null || string.IsNullOrWhiteSpace(restuarant.Id))
@@ -76,7 +94,7 @@ namespace WebApiControllers.Controllers.V2
                 return TypedResults.NotFound();
             }
 
-            logger.LogInformation("Get restuarant request complete...returning results");
+            logger.RestuarantByIdComplete();
             return TypedResults.Ok(restuarant);
         }
 
@@ -88,10 +106,10 @@ namespace WebApiControllers.Controllers.V2
         [HttpPost]
         public async Task<IResult> Post([FromBody] Restuarant restuarant)
         {
-            logger.LogInformation("Add restuarant request received");
+            logger.AddRestuarant(JsonSerializer.Serialize(restuarant));
             bool success = await restuarantRepo.InsertRestuarant(restuarant);
 
-            logger.LogInformation("Add restuarant request complete...returning results");
+            logger.AddRestuarantComplete();
             return TypedResults.Ok(success);
         }
 
@@ -103,10 +121,10 @@ namespace WebApiControllers.Controllers.V2
         [HttpPut]
         public async Task<IResult> Put([FromBody] Restuarant restuarant)
         {
-            logger.LogInformation("Update restuarant request received");
+            logger.UpdateRestuarant(JsonSerializer.Serialize(restuarant));
             bool success = await restuarantRepo.UpdateRestuarant(restuarant);
 
-            logger.LogInformation("Update restuarant request complete...returning results");
+            logger.UpdateRestuarantComplete();
             return TypedResults.Ok(success);
         }
     }

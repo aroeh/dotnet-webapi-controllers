@@ -17,6 +17,9 @@ This project is intended to be used for educational and reference purposes and w
 - NUnit tests - only on controllers to show syntax
 - MSTest tests - only on controllers to show syntax
 - Collecting Coverage Locally without needing Visual Studio Enterprise
+- Logging
+    - High Performance Logging with LoggerMessage
+    - Logging using default ILogger extensions
 - TODO: Open API Documentation on endpoints
 
 # Dependencies

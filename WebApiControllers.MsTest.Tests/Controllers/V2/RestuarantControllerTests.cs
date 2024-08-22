@@ -7,15 +7,15 @@ namespace WebApiControllers.MsTest.Tests.Controllers.V2
     [TestClass]
     public class RestuarantControllerTests
     {
-        private readonly Mock<ILogger<RestuarantController>> mockLogger;
+        private readonly Mock<ILoggerFactory> mockLoggerFactory;
         private readonly Mock<IRestuarantRepo> mockRepo;
         private readonly RestuarantController controller;
 
         public RestuarantControllerTests()
         {
-            mockLogger = new Mock<ILogger<RestuarantController>>();
+            mockLoggerFactory = new Mock<ILoggerFactory>();
             mockRepo = new Mock<IRestuarantRepo>();
-            controller = new(mockLogger.Object, mockRepo.Object);
+            controller = new(mockLoggerFactory.Object, mockRepo.Object);
         }
 
 

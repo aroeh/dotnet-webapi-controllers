@@ -1,13 +1,31 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace WebApiControllers.Middleware
 {
-    public class GlobalExceptionHandler(IHostEnvironment env, ILogger<GlobalExceptionHandler> logger) : IExceptionHandler
+    public class GlobalExceptionHandler : IExceptionHandler
     {
+        private readonly bool isDevelopment;
+        private readonly ILogger<GlobalExceptionHandler> logger;
+
+        public GlobalExceptionHandler(IHostEnvironment env, ILoggerFactory logFactory)
+        {
+            isDevelopment = env.IsDevelopment();
+            logFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddJsonConsole(options =>
+                    options.JsonWriterOptions = new JsonWriterOptions()
+                    {
+                        Indented = true
+                    });
+            });
+            logger = logFactory.CreateLogger<GlobalExceptionHandler>();
+        }
+
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
-            logger.LogError("An error occurred while processing your request: {TraceId} | {Message}", httpContext.TraceIdentifier, exception.Message);
+            logger.Error(httpContext.TraceIdentifier, exception.Message);
 
             // default the status code value to 500 for unhandled exception errors
             int statusCode = 500;
@@ -35,7 +53,7 @@ namespace WebApiControllers.Middleware
             problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
 
             // we can customize by environment if needed for additional debugging
-            if (env.IsDevelopment())
+            if (isDevelopment)
             {
                 problemDetails.Detail = exception.Message;
                 //problemDetails.Extensions["data"] = exception.Data;
