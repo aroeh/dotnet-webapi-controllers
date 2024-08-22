@@ -16,6 +16,7 @@ This project is intended to be used for educational and reference purposes and w
 - XUnit tests - tests on all classes
 - NUnit tests - only on controllers to show syntax
 - MSTest tests - only on controllers to show syntax
+- Mocking HttpContext for controller unit tests
 - Collecting Coverage Locally without needing Visual Studio Enterprise
 - Logging
     - High Performance Logging with LoggerMessage

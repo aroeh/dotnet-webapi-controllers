@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Http.HttpResults;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using WebApiControllers.Controllers.V2;
 
@@ -15,7 +17,18 @@ namespace WebApiControllers.MsTest.Tests.Controllers.V2
         {
             mockLoggerFactory = new Mock<ILoggerFactory>();
             mockRepo = new Mock<IRestuarantRepo>();
-            controller = new(mockLoggerFactory.Object, mockRepo.Object);
+            controller = new(mockLoggerFactory.Object, mockRepo.Object)
+            {
+                // There may be instances where http context might need to be mocked or setup
+                // This covers most of the basics that might be needed
+                ControllerContext = new ControllerContext()
+                {
+                    HttpContext = new DefaultHttpContext()
+                }
+            };
+            controller.HttpContext.Request.Headers["device-id"] = "20317";
+            controller.HttpContext.Request.Scheme = "http";
+            controller.HttpContext.Request.Host = new HostString("localhost");
         }
 
 
