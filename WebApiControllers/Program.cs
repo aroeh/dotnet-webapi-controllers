@@ -75,7 +75,7 @@ namespace WebApiControllers
 
             // Add classes and interfaces for dependency injection
             // transient is being used here so new instances of classes are insantiated when needed in the request pipeline
-            builder.Services.AddTransient<IMongoService, MongoService>();
+            builder.Services.AddTransient<IDatabaseWrapper, DatabaseWrapper>();
             builder.Services.AddTransient<IRestuarantRepo, RestuarantRepo>();
             builder.Services.AddTransient<IRestuarantData, RestuarantData>();
 

@@ -5,7 +5,7 @@ using WebApiControllers.Models;
 namespace WebApiControllers.DataAccess
 {
     // class setup using a primary constructor
-    public class RestuarantData(ILogger<RestuarantData> log, IMongoService mongo) : IRestuarantData
+    public class RestuarantData(ILogger<RestuarantData> log, IDatabaseWrapper mongo) : IRestuarantData
     {
         private readonly ILogger<RestuarantData> logger = log;
 
@@ -61,9 +61,7 @@ namespace WebApiControllers.DataAccess
         public async Task<Restuarant> InsertRestuarant(Restuarant rest)
         {
             logger.LogInformation("Adding new restuarant");
-            Restuarant newRestuarant = await mongo.InsertOne<Restuarant>(DataAccessConstants.MongoCollection, rest);
-
-            return newRestuarant;
+            return await mongo.InsertOne<Restuarant>(DataAccessConstants.MongoCollection, rest);
         }
 
         /// <summary>

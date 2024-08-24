@@ -6,13 +6,13 @@ namespace WebApiControllers.XUnit.Tests.DataAccess
     public class RestuarantDataTests
     {
         private readonly Mock<ILogger<RestuarantData>> mockLogger;
-        private readonly Mock<IMongoService> mockMongoService;
+        private readonly Mock<IDatabaseWrapper> mockMongoService;
         private readonly RestuarantData data;
 
         public RestuarantDataTests()
         {
             mockLogger = new Mock<ILogger<RestuarantData>>();
-            mockMongoService = new Mock<IMongoService>();
+            mockMongoService = new Mock<IDatabaseWrapper>();
 
             data = new RestuarantData(mockLogger.Object, mockMongoService.Object);
         }

@@ -3,9 +3,9 @@ using WebApiControllers.DataAccess;
 
 namespace WebApiControllers.Health
 {
-    internal class CustomMongoDbHealthCheck(IMongoService mongo) : IHealthCheck
+    internal class CustomMongoDbHealthCheck(IDatabaseWrapper mongo) : IHealthCheck
     {
-        private readonly IMongoService mongoService = mongo;
+        private readonly IDatabaseWrapper mongoService = mongo;
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken token = new())
         {

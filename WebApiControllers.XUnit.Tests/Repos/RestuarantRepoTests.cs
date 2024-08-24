@@ -203,17 +203,12 @@ namespace WebApiControllers.XUnit.Tests.Repos
             // arrange
             Restuarant mockDataRequest = new()
             {
-                Name = "test",
-                CuisineType = "test"
-            };
-            Restuarant mockDataResponse = new()
-            {
                 Id = "123456",
                 Name = "test",
                 CuisineType = "test"
             };
 
-            mockData.Setup(d => d.InsertRestuarant(It.IsAny<Restuarant>())).ReturnsAsync(mockDataResponse);
+            mockData.Setup(d => d.InsertRestuarant(It.IsAny<Restuarant>())).ReturnsAsync(mockDataRequest);
 
             // act
             var testResult = await repo.InsertRestuarant(mockDataRequest);

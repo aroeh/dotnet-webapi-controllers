@@ -71,10 +71,10 @@ namespace WebApiControllers.Repos
         public async Task<bool> InsertRestuarant(Restuarant rest)
         {
             logger.LogInformation("Adding new restuarant");
-            Restuarant newRestuarant = await restuarantData.InsertRestuarant(rest);
+            await restuarantData.InsertRestuarant(rest);
 
             logger.LogInformation("Checking insert operation result");
-            return newRestuarant != null && !string.IsNullOrWhiteSpace(newRestuarant.Id);
+            return rest != null && !string.IsNullOrWhiteSpace(rest.Id);
         }
 
         /// <summary>

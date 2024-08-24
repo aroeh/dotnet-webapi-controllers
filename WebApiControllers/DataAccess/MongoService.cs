@@ -2,9 +2,12 @@
 using WebApiControllers.Constants;
 using WebApiControllers.Models;
 
+// internal classes are not accessible directly, but if you need to access them from for example unit tests
+// then you can add the following attribute to identify which assemblies can access the internal members
+//[assembly: InternalsVisibleTo("WebApiControllers.XUnit.Tests")]
 namespace WebApiControllers.DataAccess
 {
-    public class MongoService : IMongoService
+    internal class MongoService //: IMongoService
     {
         /// <summary>
         /// Instance of the MongoClient object
@@ -23,9 +26,13 @@ namespace WebApiControllers.DataAccess
         /// </summary>
         /// <param name="log"></param>
         /// <param name="config"></param>
-        public MongoService(ILogger<MongoService> log, IConfiguration config)
+        internal MongoService(ILoggerFactory logFactory, IConfiguration config)
         {
-            logger = log;
+            logFactory = LoggerFactory.Create(builder =>
+            {
+                builder.AddConsole();
+            });
+            logger = logFactory.CreateLogger<MongoService>();
 
             // provide the key value to use to lookup the connection string from secrets
 
@@ -49,7 +56,7 @@ namespace WebApiControllers.DataAccess
         /// Checks the connection to the database and returns basic data parameters
         /// </summary>
         /// <returns>Dictionary<string, object></returns>
-        public async Task<Dictionary<string, object>> ConnectionEstablished()
+        internal async Task<Dictionary<string, object>> ConnectionEstablished()
         {
             try
             {
@@ -92,7 +99,7 @@ namespace WebApiControllers.DataAccess
         /// <param name="collectionName">MongoDb Collection Name</param>
         /// <param name="filter">Expression Filter to match documents</param>
         /// <returns>List T</returns>
-        public async Task<List<T>> FindMany<T>(string collectionName, FilterDefinition<T> filter)
+        internal async Task<List<T>> FindMany<T>(string collectionName, FilterDefinition<T> filter)
         {
             var collection = database.GetCollection<T>(collectionName);
 
@@ -107,7 +114,7 @@ namespace WebApiControllers.DataAccess
         /// <param name="collectionName">MongoDb Collection Name</param>
         /// <param name="filter">Expression Filter to match documents</param>
         /// <returns>T</returns>
-        public async Task<T> FindOne<T>(string collectionName, FilterDefinition<T> filter)
+        internal async Task<T> FindOne<T>(string collectionName, FilterDefinition<T> filter)
         {
             var collection = database.GetCollection<T>(collectionName);
 
@@ -122,13 +129,14 @@ namespace WebApiControllers.DataAccess
         /// <param name="collectionName"></param>
         /// <param name="document"></param>
         /// <returns>T</returns>
-        public async Task<T> InsertOne<T>(string collectionName, T document)
+        internal async Task<T> InsertOne<T>(string collectionName, T document)
         {
             var collection = database.GetCollection<T>(collectionName);
 
             logger.LogInformation("inserting new document");
             await collection.InsertOneAsync(document);
 
+            // Might have to update this and return an id
             return document;
         }
 
@@ -140,7 +148,7 @@ namespace WebApiControllers.DataAccess
         /// <param name="filter">Expression Filter to match documents</param>
         /// <param name="document">Latest version of the document</param>
         /// <returns>MongoUpdateResult</returns>
-        public async Task<MongoUpdateResult> ReplaceOne<T>(string collectionName, FilterDefinition<T> filter, T document)
+        internal async Task<MongoUpdateResult> ReplaceOne<T>(string collectionName, FilterDefinition<T> filter, T document)
         {
             var collection = database.GetCollection<T>(collectionName);
 
