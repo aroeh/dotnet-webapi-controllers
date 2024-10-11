@@ -80,6 +80,30 @@ namespace WebApiControllers.Controllers.V2
         }
 
         /// <summary>
+        /// Find Restuarants using matching criteria from query strings
+        /// Demonstrates the same retrieval, but using HTTP GET and passing a complex object as the 
+        /// input from the query
+        /// 
+        /// ex: GET {{controllerAddress}}/getfind?name=Test&cuisine=Test
+        /// .Net will parse the query string parameters into the object properties
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet("getfind")]
+        public async Task<IResult> GetFind([FromQuery] SearchCriteria search)
+        {
+            logger.FindRestuarants(JsonSerializer.Serialize(search));
+            List<Restuarant> restuarants = await restuarantRepo.FindRestuarants(search.Name, search.Cuisine);
+
+            if (restuarants == null || restuarants.Count == 0)
+            {
+                return TypedResults.NotFound();
+            }
+
+            logger.FindRestuarantsComplete();
+            return TypedResults.Ok(restuarants);
+        }
+
+        /// <summary>
         /// Get a Restuarant using the provided id
         /// </summary>
         /// <returns></returns>

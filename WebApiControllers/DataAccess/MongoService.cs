@@ -7,7 +7,7 @@ using WebApiControllers.Models;
 //[assembly: InternalsVisibleTo("WebApiControllers.XUnit.Tests")]
 namespace WebApiControllers.DataAccess
 {
-    internal class MongoService //: IMongoService
+    internal class MongoService
     {
         /// <summary>
         /// Instance of the MongoClient object

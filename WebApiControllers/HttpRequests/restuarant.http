@@ -12,10 +12,13 @@ Accept: {{appJson}}
 Content-Type: {{appJson}}
 
 {
-  "name": "Test",
-  "cuisine": "Test"
+  "name": "Pizza",
+  "cuisine": "Pizza"
 }
 ### POST - Find Restuarants by search criteria
+
+GET {{controllerAddress}}/getfind?name=Test&cuisine=Test
+### GET - Find Restuarants by search criteria
 
 
 @id = 66b03c2009119f72a45f9c4f
@@ -29,9 +32,9 @@ Accept: {{appJson}}
 Content-Type: {{appJson}}
 
 {
-    "name": "Test",
-    "cuisineType": "Test",
-    "website": "https://www.google.com/",
+    "name": "Pizza Palace",
+    "cuisineType": "Pizza",
+    "website": "https://www.pizza.com/",
     "phone": "1112223333",
     "address": {
         "street": "123 Test Street",

@@ -192,3 +192,6 @@ reportgenerator -reports:"TestResults\<GUID>\coverage.cobertura.xml" -targetdir:
 - [Docker Compose Repo](https://github.com/docker/awesome-compose/tree/master)
 - [Dotnet CLI](https://learn.microsoft.com/en-us/dotnet/core/tools/)
 - [Http Client Factory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)
+
+https://robrich.org/presentations
+https://github.com/robrich/net-testing-xunit-moq/blob/main/done/LightController.Tests/LightActuator_ActuateLights.cs
