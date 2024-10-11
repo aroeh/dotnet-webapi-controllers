@@ -1,6 +1,6 @@
 ﻿namespace WebApiControllers.Models
 {
-    public class MongoUpdateResult
+    public record MongoUpdateResult
     {
         /// <summary>
         /// Represents if the update operation was acknowledged by the MongoDB Database

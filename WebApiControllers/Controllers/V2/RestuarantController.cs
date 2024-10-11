@@ -85,6 +85,7 @@ namespace WebApiControllers.Controllers.V2
         /// input from the query
         /// 
         /// ex: GET {{controllerAddress}}/getfind?name=Test&cuisine=Test
+        /// array values can also be passed by adding a parameter and values like types=type1&types=type2
         /// .Net will parse the query string parameters into the object properties
         /// </summary>
         /// <returns></returns>

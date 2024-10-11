@@ -2,7 +2,7 @@
 
 namespace WebApiControllers.Models
 {
-    public class SearchCriteria
+    public record SearchCriteria
     {
         [Required]
         public string Name { get; set; } = string.Empty;

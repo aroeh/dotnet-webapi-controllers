@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace WebApiControllers.Models
 {
-    public class Location
+    public record Location
     {
         [BsonElement("street")]
         [Required]

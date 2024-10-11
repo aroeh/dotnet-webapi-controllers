@@ -17,6 +17,7 @@ Content-Type: {{appJson}}
 }
 ### POST - Find Restuarants by search criteria
 
+
 GET {{controllerAddress}}/getfind?name=Test&cuisine=Test
 ### GET - Find Restuarants by search criteria
 
@@ -26,14 +27,13 @@ GET {{controllerAddress}}/{{id}}
 ### GET - Get Restuarant by id
 
 
-
 POST {{baseAddress}}/restuarant/{{apiVersion}}
 Accept: {{appJson}}
 Content-Type: {{appJson}}
 
 {
-    "name": "Pizza Palace",
-    "cuisineType": "Pizza",
+    "name": "Test",
+    "cuisineType": "Test",
     "website": "https://www.pizza.com/",
     "phone": "1112223333",
     "address": {
