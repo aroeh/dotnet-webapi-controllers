@@ -1,4 +1,5 @@
 ﻿using MongoDB.Driver;
+using System.Diagnostics;
 using WebApiControllers.Constants;
 using WebApiControllers.Models;
 
@@ -62,19 +63,15 @@ namespace WebApiControllers.DataAccess
             {
                 CancellationToken token = new();
 
-                DateTime connectionTestStart = DateTime.UtcNow;
+                long connectionTestStart = Stopwatch.GetTimestamp();
                 var dbNames = await client.ListDatabaseNamesAsync(token);
-                DateTime connectionTestEnd = DateTime.UtcNow;
-
-                TimeSpan connectionTestDuration = (connectionTestEnd - connectionTestStart).Duration();
+                TimeSpan connectionTestDuration = Stopwatch.GetElapsedTime(connectionTestStart);
 
                 Dictionary<string, object> data = [];
 
                 if (dbNames is not null)
                 {
                     data.Add("Connected", true);
-                    data.Add("TestStartTime", connectionTestStart);
-                    data.Add("TestEndTime", connectionTestEnd);
                     data.Add("TestDuration", connectionTestDuration);
                 }
 

@@ -15,12 +15,12 @@ namespace WebApiControllers.Health
                 Dictionary<string, object> connectionCheckResults = await mongoService.ConnectionEstablished();
 
                 // check for a duration of time on the connection - is past a certain point, consider the service degraded
-                if(connectionCheckResults.ContainsKey("TestDuration"))
+                if(connectionCheckResults.TryGetValue("TestDuration", out object? value))
                 {
-                    TimeSpan duration = (TimeSpan)connectionCheckResults["TestDuration"];
+                    TimeSpan duration = (TimeSpan)value;
                     if(duration.Seconds > 4)
                     {
-                        return HealthCheckResult.Degraded("Database Connection is Healthy", null, connectionCheckResults);
+                        return HealthCheckResult.Degraded("Database Connection is Degraded - Response from the connection is Slow", null, connectionCheckResults);
                     }
                 }
 
