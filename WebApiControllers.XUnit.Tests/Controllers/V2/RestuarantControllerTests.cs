@@ -9,13 +9,13 @@ namespace WebApiControllers.XUnit.Tests.Controllers.V2
     public class RestuarantControllerTests
     {
         private readonly Mock<ILoggerFactory> mockLoggerFactory;
-        private readonly Mock<IRestuarantRepo> mockRepo;
+        private readonly Mock<IRestuarantLogic> mockRepo;
         private readonly RestuarantController controller;
 
         public RestuarantControllerTests()
         {
             mockLoggerFactory = new Mock<ILoggerFactory>();
-            mockRepo = new Mock<IRestuarantRepo>();
+            mockRepo = new Mock<IRestuarantLogic>();
             controller = new(mockLoggerFactory.Object, mockRepo.Object)
             {
                 // There may be instances where http context might need to be mocked or setup

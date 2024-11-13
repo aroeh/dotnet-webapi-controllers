@@ -5,13 +5,13 @@ namespace WebApiControllers.XUnit.Tests.Controllers.V1
     public class RestuarantControllerTests
     {
         private readonly Mock<ILogger<RestuarantController>> mockLogger;
-        private readonly Mock<IRestuarantRepo> mockRepo;
+        private readonly Mock<IRestuarantLogic> mockRepo;
         private readonly RestuarantController controller;
 
         public RestuarantControllerTests()
         {
             mockLogger = new Mock<ILogger<RestuarantController>>();
-            mockRepo = new Mock<IRestuarantRepo>();
+            mockRepo = new Mock<IRestuarantLogic>();
             controller = new(mockLogger.Object, mockRepo.Object);
         }
 

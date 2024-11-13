@@ -1,14 +1,13 @@
-﻿namespace WebApiControllers.Constants
+﻿namespace WebApiControllers.Constants;
+
+public static class DataAccessConstants
 {
-    public static class DataAccessConstants
-    {
-        // key name to point to connection string secret
-        public const string MongoConn = "MONGODB_CONN";
+    // key name to point to connection string secret
+    public const string MongoConn = "MONGODB_CONN";
 
-        // database name to connect to
-        public const string MongoDatabase = "samples";
+    // database name to connect to
+    public const string MongoDatabase = "samples";
 
-        // name of the collection containing records
-        public const string MongoCollection = "restuarants";
-    }
+    // name of the collection containing records
+    public const string MongoCollection = "restuarants";
 }
