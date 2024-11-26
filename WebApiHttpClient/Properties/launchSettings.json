@@ -1,0 +1,35 @@
+{
+  "profiles": {
+    "http": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "RESTUARANT_API": "http://localhost:5112"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "http://localhost:5062"
+    },
+    "https": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "RESTUARANT_API": "http://localhost:5112"
+      },
+      "dotnetRunMessages": true,
+      "applicationUrl": "https://localhost:7263;http://localhost:5062"
+    },
+    "Container (Dockerfile)": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http://+:80",
+        "ASPNETCORE_HTTP_PORT": "5062",
+        "RESTUARANT_API": "http://localhost:5112"
+      },
+      "publishAllPorts": true,
+      "useSSL": true
+    }
+  },
+  "$schema": "https://json.schemastore.org/launchsettings.json"
+}

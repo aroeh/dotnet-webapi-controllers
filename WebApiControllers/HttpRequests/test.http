@@ -1,7 +1,0 @@
-@appJson = application/json
-@apiVersion = v2
-@controllerAddress = {{baseAddress}}/food/{{apiVersion}}
-
-
-GET http://localhost:6112/food/v2
-### GET - Get All Restuarants

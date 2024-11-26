@@ -39,3 +39,20 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Development
       - MONGODB_CONN=mongodb://AzureDiamond:hunter2@mongo:27017
+  
+  httpapi:
+    image: ${DOCKER_REGISTRY-}httpclientapi
+    container_name: http-api
+    networks:
+      - backend
+    build:
+      context: ./WebApiHttpClient
+      dockerfile: Dockerfile
+    ports:
+      - 5062:80
+    depends_on:
+      - webapi
+    environment:
+      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_ENVIRONMENT=Development
+      - RESTUARANT_API=http://webapi

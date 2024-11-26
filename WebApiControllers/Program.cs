@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using WebApiControllers.DataAccess;
 using WebApiControllers.DomainLogic;
 using WebApiControllers.Health;
-using WebApiControllers.HttpClientHelpers;
 using WebApiControllers.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -51,22 +50,29 @@ builder.Services.AddApiVersioning(options =>
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+//builder.Services.AddEndpointsApiExplorer();
 //builder.Services.AddSwaggerGen();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-builder.Services.AddOpenApi();
-
-// register http clients for the app
-// add a typed HttpClient
-builder.Services.AddHttpClient<HttpClientHelper>(c => c.BaseAddress = new Uri("http://localhost:5112"));
-
-// add a named IHttpClientFactory
-builder.Services.AddHttpClient("restuarantClient", client =>
+//builder.Services.AddOpenApi();
+builder.Services.AddOpenApi(options =>
 {
-    client.BaseAddress = new Uri("http://localhost:5112");
+    options.AddDocumentTransformer((document, context, cancellationToken) =>
+    {
+        document.Info = new()
+        {
+            Title = "Restuarant API V2",
+            Version = "v2",
+            Description = "Expanded and full version of the resutarant api"
+        };
+        //document.Paths = new()
+        //{
+        //    a
+        //};
+        return Task.CompletedTask;
+    });
 });
-builder.Services.AddTransient<HttpFactoryHelper>();
+
 
 // Add classes and interfaces for dependency injection
 // transient is being used here so new instances of classes are insantiated when needed in the request pipeline
@@ -87,7 +93,13 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    //ApiVersionSetBuilder versionBuilder = new("restuarant");
+    //versionBuilder.HasApiVersion(new Asp.Versioning.ApiVersion(2));
+    //versionBuilder.HasDeprecatedApiVersion(new Asp.Versioning.ApiVersion(1));
+    //versionBuilder.ReportApiVersions();
     app.MapOpenApi();
+        //.WithApiVersionSet(new ApiVersionSet(versionBuilder, "restuarant"))
+        //.ReportApiVersions();
 }
 else
 {

@@ -1,0 +1,11 @@
+@appJson = application/json
+@controllerAddress = {{baseAddress}}/test
+
+
+
+GET {{controllerAddress}}/factory
+### GET - Get All Restuarants using http factory
+
+
+GET {{controllerAddress}}/client
+### GET - Get All Restuarants using http client
