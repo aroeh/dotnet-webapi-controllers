@@ -21,7 +21,6 @@ public class TestController(ILogger<TestController> log, HttpFactoryHelper facto
     public async Task<IResult> GetUsingFactory()
     {
         List<Restuarant> restuarants = await httpFactory.GetAsync<List<Restuarant>>("/restuarant/v2");
-        //List<Restuarant> restuarants = await httpFactory.Get<List<Restuarant>>("/restuarant/v2");
 
         return TypedResults.Ok(restuarants);
     }
