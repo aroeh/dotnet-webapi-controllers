@@ -1,12 +1,12 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using MongoDB.Driver;
 using System.Diagnostics;
-using WebApiControllers.Constants;
-using WebApiControllers.Models;
+using WebApiControllers.Infrastructure.Constants;
+using WebApiControllers.Shared.Models;
 
-// internal classes are not accessible directly, but if you need to access them from for example unit tests
-// then you can add the following attribute to identify which assemblies can access the internal members
-//[assembly: InternalsVisibleTo("WebApiControllers.XUnit.Tests")]
-namespace WebApiControllers.DataAccess;
+namespace WebApiControllers.Infrastructure.Services;
 
 internal class MongoService
 {

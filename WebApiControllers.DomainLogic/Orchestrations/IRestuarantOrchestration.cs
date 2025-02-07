@@ -1,8 +1,8 @@
-using WebApiControllers.Models;
+﻿using WebApiControllers.Shared.Models;
 
-namespace WebApiControllers.DomainLogic;
+namespace WebApiControllers.DomainLogic.Orchestrations;
 
-public interface IRestuarantLogic
+public interface IRestuarantOrchestration
 {
     /// <summary>
     /// Retrieves all Restuarant from the database

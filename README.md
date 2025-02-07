@@ -2,6 +2,7 @@
 This project is intended to be used for educational and reference purposes and will be updated (as time allows) as new technologies and libraries are released.  This is a .Net Web API using Controllers demonstrating several concepts for useful and more common features and attributes of APIs.
 
 ## Demonstrated Features
+- Clean Architecture concept
 - Global Exception Handling
 - Health Checks on dependent services
 - Controller Output Caching
@@ -52,6 +53,46 @@ This project is locally setup to use a MongoDB Docker Container.  The connection
 # Run the Solution
 The easiest way to run this solution is to use docker compose as that will build the api project and provide containers for the data.  But there are other options as well.
 
+
+## API Dockerfiles
+There are 2 Dockerfiles present in the WebApiControllers project: Dockerfile and Dockerfile_NoBuild.  Each one demonstrates a different approach and potential use case.
+Dockerfile is the initial setup default within the repository.
+
+### Dockerfile
+Dockerfile is typically the default kind of file that Visual Studio auto generates with adding container support to a project.  
+This example handles building the solution in a base image and then publishing the code to a runtime image.
+This could be useful when wanting to debug and letting the docker runtime handle all of the work, or if you don't want to manually build and publish code before spinning up a new image and container.
+
+### Dockerfile_NoBuild
+This is a much smaller and much more simple docker file.  It does require published code to have already been produced to copy into the runtime image.
+The Docker build and container spin up is much faster since it doesn't have to build the solution in the image itself.  
+This scenario is useful in pipeline scenarios where the code may have already been built and published by prior tasks in a job.
+
+To use this docker file in the solution, do the following:
+
+1. In a command line, navigate to the directory containing the WebApiControllers.csproj
+```
+cd <path>\WebApiControllers
+```
+
+> Alter the path variable to match your local environment
+
+2. Build the project either at the project or solution level
+```
+dotnet build
+```
+
+3. Publish the code into a directory using the Release configuration
+```
+dotnet publish WebApiControllers.csproj -c Release -o publish /p:UseAppHost=false
+```
+
+> This creates a new directory at `<path>\WebApiControllers\publish`
+
+4. Update the docker-compose.yaml section for webapi.
+    - Change the value of build.docker from WebApiControllers/Dockerfile to `WebApiControllers/Dockerfile_NoBuild`
+
+
 ## Docker Compose
 1. Optional - build all containers in the compose yaml
 ```
@@ -78,7 +119,7 @@ docker compose stop
 docker compose start
 ```
 
-### Clean UP
+### Clean Up
 Once containers are no longer needed you can remove them all using the compose down command
 ```
 docker compose down
@@ -112,7 +153,7 @@ docker build -t my_api_image -f Dockerfile .
 docker run -d -p 5112:80 -e "ASPNETCORE_ENVIRONMENT=Development" -e "MONGODB_CONN=mongodb://mongoUser:mongoPassword@mongoLocal:27017" -e "ASPNETCORE_URLS=http://+:80" --name my_api_container my_api_image
 ```
 
-> This repo is not demonstrating security for the mongo db admin user or connection strings.  But best practice would not be to hard code those values and instead pull them from a secure location.
+> This repo is not demonstrating security for the mongo db admin user or connection strings.  The best practice would be to store the credentials in a secure vault and retrieve them from the vault.
 
 5. Create a docker network
 ```
@@ -130,8 +171,9 @@ docker network connect my_api_container
 
 6. Test the api using an http client like Postman or Visual Studio and .http files
 
+
 ## Containers and IDE
-1. Create and the Mongo DB container
+1. Create and use the Mongo DB container
 > You can use either the docker or docker compose commands
 > If using docker compose, you may need to pause the api container
 

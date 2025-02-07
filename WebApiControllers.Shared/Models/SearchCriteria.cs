@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApiControllers.Models;
+namespace WebApiControllers.Shared.Models;
 
 public record SearchCriteria
 {

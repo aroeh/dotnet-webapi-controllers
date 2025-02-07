@@ -3,9 +3,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OutputCaching;
 using System.Text.Encodings.Web;
 using System.Text.Json;
+using WebApiControllers.DomainLogic.Orchestrations;
 using WebApiControllers.Middleware;
-using WebApiControllers.Models;
-using WebApiControllers.DomainLogic;
+using WebApiControllers.Shared.Models;
 
 namespace WebApiControllers.Controllers.V2;
 
@@ -23,9 +23,9 @@ namespace WebApiControllers.Controllers.V2;
 public class RestuarantController : ControllerBase
 {
     private readonly ILogger<RestuarantController> logger;
-    private readonly IRestuarantLogic restuarantRepo;
+    private readonly IRestuarantOrchestration restuarantOrchestration;
 
-    public RestuarantController(ILoggerFactory logFactory, IRestuarantLogic repo)
+    public RestuarantController(ILoggerFactory logFactory, IRestuarantOrchestration orchestration)
     {
         logFactory = LoggerFactory.Create(builder =>
         {
@@ -37,7 +37,7 @@ public class RestuarantController : ControllerBase
                 });
         });
         logger = logFactory.CreateLogger<RestuarantController>();
-        restuarantRepo = repo;
+        restuarantOrchestration = orchestration;
     }
 
     /// <summary>
@@ -49,7 +49,7 @@ public class RestuarantController : ControllerBase
     public async Task<IResult> Get()
     {
         logger.GetAllRestuarants();
-        List<Restuarant> restuarants = await restuarantRepo.GetAllRestuarants();
+        List<Restuarant> restuarants = await restuarantOrchestration.GetAllRestuarants();
 
         if(restuarants == null || restuarants.Count == 0)
         {
@@ -68,7 +68,7 @@ public class RestuarantController : ControllerBase
     public async Task<IResult> Find([FromBody] SearchCriteria search)
     {
         logger.FindRestuarants(JsonSerializer.Serialize(search));
-        List<Restuarant> restuarants = await restuarantRepo.FindRestuarants(search.Name, search.Cuisine);
+        List<Restuarant> restuarants = await restuarantOrchestration.FindRestuarants(search.Name, search.Cuisine);
 
         if (restuarants == null || restuarants.Count == 0)
         {
@@ -93,7 +93,7 @@ public class RestuarantController : ControllerBase
     public async Task<IResult> GetFind([FromQuery] SearchCriteria search)
     {
         logger.FindRestuarants(JsonSerializer.Serialize(search));
-        List<Restuarant> restuarants = await restuarantRepo.FindRestuarants(search.Name, search.Cuisine);
+        List<Restuarant> restuarants = await restuarantOrchestration.FindRestuarants(search.Name, search.Cuisine);
 
         if (restuarants == null || restuarants.Count == 0)
         {
@@ -112,7 +112,7 @@ public class RestuarantController : ControllerBase
     public async Task<IResult> Restuarant(string id)
     {
         logger.RestuarantById(id);
-        Restuarant restuarant = await restuarantRepo.GetRestuarant(id);
+        Restuarant restuarant = await restuarantOrchestration.GetRestuarant(id);
 
         if(restuarant == null || string.IsNullOrWhiteSpace(restuarant.Id))
         {
@@ -132,7 +132,7 @@ public class RestuarantController : ControllerBase
     public async Task<IResult> Post([FromBody] Restuarant restuarant)
     {
         logger.AddRestuarant(JsonSerializer.Serialize(restuarant));
-        bool success = await restuarantRepo.InsertRestuarant(restuarant);
+        bool success = await restuarantOrchestration.InsertRestuarant(restuarant);
 
         logger.AddRestuarantComplete();
         return TypedResults.Ok(success);
@@ -147,7 +147,7 @@ public class RestuarantController : ControllerBase
     public async Task<IResult> PostMany([FromBody] Restuarant[] restuarants)
     {
         logger.LogInformation("Add restuarant request received");
-        bool success = await restuarantRepo.InsertRestuarants(restuarants);
+        bool success = await restuarantOrchestration.InsertRestuarants(restuarants);
 
         logger.LogInformation("Add restuarant request complete...returning results");
         return TypedResults.Ok(success);
@@ -162,7 +162,7 @@ public class RestuarantController : ControllerBase
     public async Task<IResult> Put([FromBody] Restuarant restuarant)
     {
         logger.UpdateRestuarant(JsonSerializer.Serialize(restuarant));
-        bool success = await restuarantRepo.UpdateRestuarant(restuarant);
+        bool success = await restuarantOrchestration.UpdateRestuarant(restuarant);
 
         logger.UpdateRestuarantComplete();
         return TypedResults.Ok(success);

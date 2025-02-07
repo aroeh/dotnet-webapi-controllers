@@ -13,6 +13,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiControllers.MsTest.Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiHttpClient", "WebApiHttpClient\WebApiHttpClient.csproj", "{558D5490-929F-469A-8C15-C3567CE2A578}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiControllers.Infrastructure", "WebApiControllers.Infrastructure\WebApiControllers.Infrastructure.csproj", "{9F448036-4C33-4C2C-9CF8-5735073CEFA2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiControllers.DomainLogic", "WebApiControllers.DomainLogic\WebApiControllers.DomainLogic.csproj", "{B738EFE6-4B5E-4725-928E-CEA7E5A28983}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebApiControllers.Shared", "WebApiControllers.Shared\WebApiControllers.Shared.csproj", "{B34B8564-8CA3-4C37-AD7A-C320002FDCA7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +45,18 @@ Global
 		{558D5490-929F-469A-8C15-C3567CE2A578}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{558D5490-929F-469A-8C15-C3567CE2A578}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{558D5490-929F-469A-8C15-C3567CE2A578}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F448036-4C33-4C2C-9CF8-5735073CEFA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F448036-4C33-4C2C-9CF8-5735073CEFA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F448036-4C33-4C2C-9CF8-5735073CEFA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F448036-4C33-4C2C-9CF8-5735073CEFA2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B738EFE6-4B5E-4725-928E-CEA7E5A28983}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B738EFE6-4B5E-4725-928E-CEA7E5A28983}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B738EFE6-4B5E-4725-928E-CEA7E5A28983}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B738EFE6-4B5E-4725-928E-CEA7E5A28983}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B34B8564-8CA3-4C37-AD7A-C320002FDCA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B34B8564-8CA3-4C37-AD7A-C320002FDCA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B34B8564-8CA3-4C37-AD7A-C320002FDCA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B34B8564-8CA3-4C37-AD7A-C320002FDCA7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

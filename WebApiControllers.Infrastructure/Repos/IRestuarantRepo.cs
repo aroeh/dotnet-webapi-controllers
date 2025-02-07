@@ -1,8 +1,8 @@
-﻿using WebApiControllers.Models;
+﻿using WebApiControllers.Shared.Models;
 
-namespace WebApiControllers.DataAccess;
+namespace WebApiControllers.Infrastructure.Repos;
 
-public interface IRestuarantData
+public interface IRestuarantRepo
 {
     /// <summary>
     /// Returns a collection of all restuarants in the database

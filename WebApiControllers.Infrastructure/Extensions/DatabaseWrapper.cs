@@ -1,15 +1,21 @@
-﻿using MongoDB.Driver;
-using WebApiControllers.Models;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+using WebApiControllers.Infrastructure.Services;
+using WebApiControllers.Shared.Models;
 
-namespace WebApiControllers.DataAccess;
+namespace WebApiControllers.Infrastructure.Extensions;
 
-public interface IDatabaseWrapper
+public class DatabaseWrapper(ILoggerFactory logFactory, IConfiguration config) : IDatabaseWrapper
 {
+    private readonly MongoService mongoService = new(logFactory, config);
+
+
     /// <summary>
     /// Checks the connection to the database and returns basic data parameters
     /// </summary>
     /// <returns>Dictionary of Connection Results</returns>
-    Task<Dictionary<string, object>> ConnectionEstablished();
+    public Task<Dictionary<string, object>> ConnectionEstablished() => mongoService.ConnectionEstablished();
 
     /// <summary>
     /// Finds items in the specified collection using a filter definition
@@ -18,7 +24,7 @@ public interface IDatabaseWrapper
     /// <param name="collectionName">MongoDb Collection Name</param>
     /// <param name="filter">Expression Filter to match documents</param>
     /// <returns>Task List of Generic Type T</returns>
-    Task<List<T>> FindMany<T>(string collectionName, FilterDefinition<T> filter);
+    public Task<List<T>> FindMany<T>(string collectionName, FilterDefinition<T> filter) => mongoService.FindMany<T>(collectionName, filter);
 
     /// <summary>
     /// Finds one item in the specified collection using a filter definition
@@ -27,16 +33,16 @@ public interface IDatabaseWrapper
     /// <param name="collectionName">MongoDb Collection Name</param>
     /// <param name="filter">Expression Filter to match documents</param>
     /// <returns>Task of Generic Type T</returns>
-    Task<T> FindOne<T>(string collectionName, FilterDefinition<T> filter);
+    public Task<T> FindOne<T>(string collectionName, FilterDefinition<T> filter) => mongoService.FindOne<T>(collectionName, filter);
 
     /// <summary>
     /// Insert a new document into the specified collection
     /// </summary>
     /// <typeparam name="T">Generic Type for the input and output objects</typeparam>
-    /// <param name="collectionName">MongoDb Collection Name</param>
-    /// <param name="document">New Document to be inserted</param>
+    /// <param name="collectionName"></param>
+    /// <param name="document"></param>
     /// <returns>Task of Generic Type T</returns>
-    Task<T> InsertOne<T>(string collectionName, T document);
+    public Task<T> InsertOne<T>(string collectionName, T document) => mongoService.InsertOne<T>(collectionName, document);
 
     /// <summary>
     /// Insert multiple new documents into the specified collection
@@ -45,7 +51,7 @@ public interface IDatabaseWrapper
     /// <param name="collectionName">MongoDb Collection Name</param>
     /// <param name="documents">New Document to be inserted</param>
     /// <returns>Task Enumerable of T with updated ids from the insert operation</returns>
-    Task<IEnumerable<T>> InsertMany<T>(string collectionName, IEnumerable<T> documents);
+    public Task<IEnumerable<T>> InsertMany<T>(string collectionName, IEnumerable<T> documents) => mongoService.InsertMany<T>(collectionName, documents);
 
     /// <summary>
     /// Replaces a document with a later version using a filter to match the record
@@ -54,6 +60,6 @@ public interface IDatabaseWrapper
     /// <param name="collectionName">MongoDb Collection Name</param>
     /// <param name="filter">Expression Filter to match documents</param>
     /// <param name="document">Latest version of the document</param>
-    /// <returns>Task of type MongoUpdateResult</returns>
-    Task<MongoUpdateResult> ReplaceOne<T>(string collectionName, FilterDefinition<T> filter, T document);
+    /// <returns>MongoUpdateResult</returns>
+    public Task<MongoUpdateResult> ReplaceOne<T>(string collectionName, FilterDefinition<T> filter, T document) => mongoService.ReplaceOne<T>(collectionName, filter, document);
 }

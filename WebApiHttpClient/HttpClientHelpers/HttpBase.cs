@@ -60,6 +60,11 @@ public abstract class HttpBase(ILogger log, HttpClient http)
 
     private async Task<T> ValidateAndDeserialize<T>(HttpResponseMessage response)
     {
+        /*
+            If needing to ensure success or throw an exception, can also use the following
+            response.EnsureSuccessStatusCode()
+        */
+
         // ensure the response was successful - if not successful, then return a default version of the object
         if (!response.IsSuccessStatusCode)
         {

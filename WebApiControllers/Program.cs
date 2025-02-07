@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
-using WebApiControllers.DataAccess;
-using WebApiControllers.DomainLogic;
+using WebApiControllers.DomainLogic.Orchestrations;
 using WebApiControllers.Health;
+using WebApiControllers.Infrastructure.Extensions;
+using WebApiControllers.Infrastructure.Repos;
 using WebApiControllers.Middleware;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -77,8 +78,8 @@ builder.Services.AddOpenApi(options =>
 // Add classes and interfaces for dependency injection
 // transient is being used here so new instances of classes are insantiated when needed in the request pipeline
 builder.Services.AddTransient<IDatabaseWrapper, DatabaseWrapper>();
-builder.Services.AddTransient<IRestuarantLogic, RestuarantLogic>();
-builder.Services.AddTransient<IRestuarantData, RestuarantData>();
+builder.Services.AddTransient<IRestuarantOrchestration, RestuarantOrchestration>();
+builder.Services.AddTransient<IRestuarantRepo, RestuarantRepo>();
 
 // add hsts security headers
 builder.Services.AddHsts(options =>

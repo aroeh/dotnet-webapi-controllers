@@ -1,8 +1,8 @@
-﻿using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
 using System.ComponentModel.DataAnnotations;
 
-namespace WebApiControllers.Models;
+namespace WebApiControllers.Shared.Models;
 
 /// <summary>
 /// Here we've got a sample model for outlining basic information tracking a restuarant

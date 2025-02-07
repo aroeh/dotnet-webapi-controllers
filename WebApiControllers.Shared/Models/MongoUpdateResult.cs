@@ -1,4 +1,4 @@
-﻿namespace WebApiControllers.Models;
+﻿namespace WebApiControllers.Shared.Models;
 
 public record MongoUpdateResult
 {

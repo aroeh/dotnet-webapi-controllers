@@ -32,6 +32,7 @@ public class TestController(ILogger<TestController> log, HttpFactoryHelper facto
     [HttpGet("client")]
     public async Task<IResult> GetUsingClient()
     {
+        clientHelper.SetHeader();
         List<Restuarant> restuarants = await clientHelper.GetAsync<List<Restuarant>>("/restuarant/v2");
 
         return TypedResults.Ok(restuarants);

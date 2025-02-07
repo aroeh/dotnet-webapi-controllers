@@ -1,7 +1,7 @@
 ﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
-using WebApiControllers.Models;
-using WebApiControllers.DomainLogic;
+using WebApiControllers.Shared.Models;
+using WebApiControllers.DomainLogic.Orchestrations;
 
 namespace WebApiControllers.Controllers.V1;
 
@@ -16,10 +16,10 @@ namespace WebApiControllers.Controllers.V1;
 [ApiVersion("1.0", Deprecated = true)]
 [Produces("application/json")]
 [Route("[controller]/v{version:apiVersion}")]
-public class RestuarantController(ILogger<RestuarantController> log, IRestuarantLogic repo) : ControllerBase
+public class RestuarantController(ILogger<RestuarantController> log, IRestuarantOrchestration orchestration) : ControllerBase
 {
     private readonly ILogger<RestuarantController> logger = log;
-    private readonly IRestuarantLogic restuarantRepo = repo;
+    private readonly IRestuarantOrchestration restuarantOrchestration = orchestration;
 
     /// <summary>
     /// Get All Restuarants
@@ -29,7 +29,7 @@ public class RestuarantController(ILogger<RestuarantController> log, IRestuarant
     public async Task<List<Restuarant>> Get()
     {
         logger.LogInformation("Get all restuarants request received");
-        List<Restuarant> restuarants = await restuarantRepo.GetAllRestuarants();
+        List<Restuarant> restuarants = await restuarantOrchestration.GetAllRestuarants();
 
         logger.LogInformation("Get all restuarants request complete...returning results");
         return restuarants;
@@ -43,7 +43,7 @@ public class RestuarantController(ILogger<RestuarantController> log, IRestuarant
     public async Task<List<Restuarant>> Find([FromQuery] string name, [FromQuery] string cuisine)
     {
         logger.LogInformation("Find restuarants request received");
-        List<Restuarant> restuarants = await restuarantRepo.FindRestuarants(name, cuisine);
+        List<Restuarant> restuarants = await restuarantOrchestration.FindRestuarants(name, cuisine);
 
         logger.LogInformation("Find restuarants request complete...returning results");
         return restuarants;
@@ -57,7 +57,7 @@ public class RestuarantController(ILogger<RestuarantController> log, IRestuarant
     public async Task<Restuarant> Restuarant(string id)
     {
         logger.LogInformation("Get restuarant request received");
-        Restuarant restuarant = await restuarantRepo.GetRestuarant(id);
+        Restuarant restuarant = await restuarantOrchestration.GetRestuarant(id);
 
         logger.LogInformation("Get restuarant request complete...returning results");
         return restuarant;

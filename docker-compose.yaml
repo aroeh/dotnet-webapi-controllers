@@ -29,8 +29,8 @@ services:
     networks:
       - backend
     build:
-      context: ./WebApiControllers
-      dockerfile: Dockerfile
+      context: . # context at the root is the path containing the compose file
+      dockerfile: WebApiControllers/Dockerfile
     ports:
       - 5112:80
     depends_on:

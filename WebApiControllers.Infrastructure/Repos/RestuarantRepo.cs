@@ -1,13 +1,14 @@
-﻿using MongoDB.Driver;
-using WebApiControllers.Constants;
-using WebApiControllers.Models;
+﻿using Microsoft.Extensions.Logging;
+using MongoDB.Driver;
+using WebApiControllers.Infrastructure.Constants;
+using WebApiControllers.Infrastructure.Extensions;
+using WebApiControllers.Shared.Models;
 
-namespace WebApiControllers.DataAccess;
+namespace WebApiControllers.Infrastructure.Repos;
 
-// class setup using a primary constructor
-public class RestuarantData(ILogger<RestuarantData> log, IDatabaseWrapper mongo) : IRestuarantData
+public class RestuarantRepo(ILogger<RestuarantRepo> log, IDatabaseWrapper mongo) : IRestuarantRepo
 {
-    private readonly ILogger<RestuarantData> logger = log;
+    private readonly ILogger<RestuarantRepo> logger = log;
 
 
     /// <summary>

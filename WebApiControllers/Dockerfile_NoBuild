@@ -1,0 +1,8 @@
+# This docker file demontrates using a pre-published set of code to copy directly into a runtime image
+# this is much faster than building within the docker image itself and could be useful within a pipeline
+
+FROM mcr.microsoft.com/dotnet/aspnet:9.0
+USER app
+WORKDIR /app
+COPY WebApiControllers/publish .
+ENTRYPOINT ["dotnet", "WebApiControllers.dll"]

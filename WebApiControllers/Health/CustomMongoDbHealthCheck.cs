@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Diagnostics.HealthChecks;
-using WebApiControllers.DataAccess;
+using WebApiControllers.Infrastructure.Extensions;
+
 
 namespace WebApiControllers.Health;
 
