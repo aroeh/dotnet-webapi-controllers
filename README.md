@@ -57,9 +57,11 @@ The easiest way to run this solution is to use docker compose as that will build
 ## API Dockerfiles
 There are 2 Dockerfiles present in the WebApiControllers project:
 - Dockerfile
-- Dockerfile_NoBuild.  Each one demonstrates a different approach and potential use case.
+- Dockerfile_NoBuild
 
-Dockerfile is the initial setup default within the repository.
+> Dockerfile is the initial setup default within the repository.
+
+Each one demonstrates a different approach and potential use case.
 
 ### Dockerfile
 Dockerfile is typically the default kind of file that Visual Studio auto generates with adding container support to a project.  
