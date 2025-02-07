@@ -55,7 +55,10 @@ The easiest way to run this solution is to use docker compose as that will build
 
 
 ## API Dockerfiles
-There are 2 Dockerfiles present in the WebApiControllers project: Dockerfile and Dockerfile_NoBuild.  Each one demonstrates a different approach and potential use case.
+There are 2 Dockerfiles present in the WebApiControllers project:
+- Dockerfile
+- Dockerfile_NoBuild.  Each one demonstrates a different approach and potential use case.
+
 Dockerfile is the initial setup default within the repository.
 
 ### Dockerfile
@@ -64,7 +67,7 @@ This example handles building the solution in a base image and then publishing t
 This could be useful when wanting to debug and letting the docker runtime handle all of the work, or if you don't want to manually build and publish code before spinning up a new image and container.
 
 ### Dockerfile_NoBuild
-This is a much smaller and much more simple docker file.  It does require published code to have already been produced to copy into the runtime image.
+This is a much smaller and much more simple docker file.  It requires published code to have already been produced to copy into the runtime image.
 The Docker build and container spin up is much faster since it doesn't have to build the solution in the image itself.  
 This scenario is useful in pipeline scenarios where the code may have already been built and published by prior tasks in a job.
 
@@ -234,6 +237,5 @@ reportgenerator -reports:"TestResults\<GUID>\coverage.cobertura.xml" -targetdir:
 - [Docker Compose Repo](https://github.com/docker/awesome-compose/tree/master)
 - [Dotnet CLI](https://learn.microsoft.com/en-us/dotnet/core/tools/)
 - [Http Client Factory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)
-
-https://robrich.org/presentations
-https://github.com/robrich/net-testing-xunit-moq/blob/main/done/LightController.Tests/LightActuator_ActuateLights.cs
+- [Rob Rich Presentations](https://robrich.org/presentations)
+- [Rob Rich XUnit Testing](https://github.com/robrich/net-testing-xunit-moq/blob/main/done/LightController.Tests/LightActuator_ActuateLights.cs)
