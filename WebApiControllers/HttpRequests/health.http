@@ -1,3 +1,0 @@
-GET {{baseAddress}}/health
-Accept: application/json
-### Call the Health Check endpoint

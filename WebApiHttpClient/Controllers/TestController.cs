@@ -1,6 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Demo.Restuarants.API.Shared.Models;
+using Microsoft.AspNetCore.Mvc;
 using WebApiHttpClient.HttpClientHelpers;
-using WebApiHttpClient.Models;
 
 namespace WebApiHttpClient.Controllers;
 
@@ -20,7 +20,7 @@ public class TestController(ILogger<TestController> log, HttpFactoryHelper facto
     [HttpGet("factory")]
     public async Task<IResult> GetUsingFactory()
     {
-        List<Restuarant> restuarants = await httpFactory.GetAsync<List<Restuarant>>("/restuarant/v2");
+        var restuarants = await httpFactory.GetAsync<PaginationResponse<RestuarantBO>>("api/restuarant/v3");
 
         return TypedResults.Ok(restuarants);
     }
@@ -33,7 +33,7 @@ public class TestController(ILogger<TestController> log, HttpFactoryHelper facto
     public async Task<IResult> GetUsingClient()
     {
         clientHelper.SetHeader();
-        List<Restuarant> restuarants = await clientHelper.GetAsync<List<Restuarant>>("/restuarant/v2");
+        var restuarants = await clientHelper.GetAsync<PaginationResponse<RestuarantBO>>("api/restuarant/v3");
 
         return TypedResults.Ok(restuarants);
     }

@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/Tests/">
+    <Project Path="Demo.Restuarants.API.XUnit.Tests/Demo.Restuarants.API.XUnit.Tests.csproj" />
+    <Project Path="Demo.Resuarants.API.MsTests.Tests/Demo.Resuarants.API.MsTests.Tests.csproj" />
+    <Project Path="Demo.Resuarants.API.NUnit.Tests/Demo.Resuarants.API.NUnit.Tests.csproj" />
+  </Folder>
+  <Project Path="Demo.Restuarants.API.Core/Demo.Restuarants.API.Core.csproj" />
+  <Project Path="Demo.Restuarants.API.MongoDb.Infrastructure/Demo.Restuarants.API.MongoDb.Infrastructure.csproj" />
+  <Project Path="Demo.Restuarants.API.Shared/Demo.Restuarants.API.Shared.csproj" />
+  <Project Path="Demo.Restuarants.API/Demo.Restuarants.API.csproj" />
+  <Project Path="WebApiHttpClient/WebApiHttpClient.csproj" />
+</Solution>
