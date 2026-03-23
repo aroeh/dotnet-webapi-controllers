@@ -3,4 +3,4 @@ variables:
   - name: host
     value: http://localhost:5017
   - name: api-version
-    value: "3"
+    value: "3.0"

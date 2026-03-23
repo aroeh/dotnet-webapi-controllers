@@ -11,7 +11,7 @@ FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 COPY ["WebApiHttpClient/WebApiHttpClient.csproj", "WebApiHttpClient/WebApiHttpClient/"]
-COPY ["Demo.Restuarants.API.Shared/Demo.Restuarants.API.Shared.csproj", "Demo.Restuarants.API.Shared/Demo.Restuarants.API.Shared/"]
+COPY ["Demo.Restuarants.Shared/Demo.Restuarants.Shared.csproj", "Demo.Restuarants.Shared/Demo.Restuarants.Shared/"]
 RUN dotnet restore "./WebApiHttpClient/WebApiHttpClient/WebApiHttpClient.csproj"
 COPY . WebApiHttpClient/
 WORKDIR "/src/WebApiHttpClient/WebApiHttpClient"

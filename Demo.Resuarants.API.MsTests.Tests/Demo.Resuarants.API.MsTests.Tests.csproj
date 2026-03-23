@@ -18,8 +18,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Demo.Restuarants.API.Core\Demo.Restuarants.API.Core.csproj" />
-    <ProjectReference Include="..\Demo.Restuarants.API.Shared\Demo.Restuarants.API.Shared.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.API.Models\Demo.Restuarants.API.Models.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.Core\Demo.Restuarants.Core.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.Shared\Demo.Restuarants.Shared.csproj" />
     <ProjectReference Include="..\Demo.Restuarants.API\Demo.Restuarants.API.csproj" />
   </ItemGroup>
 

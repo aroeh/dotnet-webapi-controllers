@@ -14,7 +14,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Demo.Restuarants.API.Shared\Demo.Restuarants.API.Shared.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.API.SDK\Demo.Restuarants.API.SDK.csproj" />
   </ItemGroup>
 
 </Project>

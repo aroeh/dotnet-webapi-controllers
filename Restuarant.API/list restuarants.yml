@@ -5,8 +5,11 @@ info:
 
 http:
   method: GET
-  url: "{{host}}/api/restuarant/{{api-version}}?page=1&pageSize=25"
+  url: "{{host}}/api/restuarant?api-version={{api-version}}&page=1&pageSize=25"
   params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
     - name: page
       value: "1"
       type: query
@@ -15,6 +18,10 @@ http:
       type: query
     - name: name
       value: pizza
+      type: query
+      disabled: true
+    - name: name
+      value: cookie
       type: query
       disabled: true
     - name: cuisine

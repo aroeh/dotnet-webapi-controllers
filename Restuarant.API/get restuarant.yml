@@ -5,7 +5,11 @@ info:
 
 http:
   method: GET
-  url: "{{host}}/api/restuarant/{{api-version}}/{restuarantId}"
+  url: "{{host}}/api/restuarant/{restuarantId}?api-version={{api-version}}"
+  params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
   auth: inherit
 
 settings:

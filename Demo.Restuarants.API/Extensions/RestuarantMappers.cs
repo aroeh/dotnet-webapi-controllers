@@ -1,5 +1,5 @@
 ﻿using Demo.Restuarants.API.Models;
-using Demo.Restuarants.API.Shared.Models;
+using Demo.Restuarants.Shared.Models;
 
 namespace Demo.Restuarants.API.Extensions;
 

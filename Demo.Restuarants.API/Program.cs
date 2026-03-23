@@ -1,7 +1,7 @@
-using Demo.Restuarants.API.Core.Extensions;
 using Demo.Restuarants.API.Middleware;
 using Demo.Restuarants.API.MongoDb.Infrastructure.Extensions;
-using Demo.Restuarants.API.MongoDb.Infrastructure.Health;
+using Demo.Restuarants.Core.Extensions;
+using Demo.Restuarants.Infrastructure.MongoDb.Health;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 
@@ -44,17 +44,14 @@ builder.Services.Configure<JsonOptions>(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-// setup api versioning using url path versioning
+// setup api versioning using query string versioning
 builder.Services.AddApiVersioning(options =>
 {
-    options.DefaultApiVersion = new Asp.Versioning.ApiVersion(1, 0);
-    options.AssumeDefaultVersionWhenUnspecified = true;
     options.ReportApiVersions = true;
 })
 .AddApiExplorer(options =>
 {
     options.GroupNameFormat = "'v'VVV";
-    options.SubstituteApiVersionInUrl = true;
 });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

@@ -7,9 +7,9 @@ ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
 COPY ["Demo.Restuarants.API/Demo.Restuarants.API.csproj", "Demo.Restuarants.API/Demo.Restuarants.API/"]
-COPY ["Demo.Restuarants.API.Core/Demo.Restuarants.API.Core.csproj", "Demo.Restuarants.API.Core/Demo.Restuarants.API.Core/"]
-COPY ["Demo.Restuarants.API.MongoDb.Infrastructure/Demo.Restuarants.API.MongoDb.Infrastructure.csproj", "Demo.Restuarants.API.MongoDb.Infrastructure/Demo.Restuarants.API.MongoDb.Infrastructure/"]
-COPY ["Demo.Restuarants.API.Shared/Demo.Restuarants.API.Shared.csproj", "Demo.Restuarants.API.Shared/Demo.Restuarants.API.Shared/"]
+COPY ["Demo.Restuarants.Core/Demo.Restuarants.Core.csproj", "Demo.Restuarants.Core/Demo.Restuarants.Core/"]
+COPY ["Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.Infrastructure.MongoDb.csproj", "Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.InfrastructureMongoDb/"]
+COPY ["Demo.Restuarants.Shared/Demo.Restuarants.Shared.csproj", "Demo.Restuarants.Shared/Demo.Restuarants.Shared/"]
 
 RUN dotnet restore "./Demo.Restuarants.API/Demo.Restuarants.API/Demo.Restuarants.API.csproj"
 

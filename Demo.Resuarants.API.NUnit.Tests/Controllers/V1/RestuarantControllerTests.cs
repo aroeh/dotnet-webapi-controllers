@@ -1,4 +1,6 @@
 ﻿using Demo.Restuarants.API.Controllers.V1;
+using Demo.Restuarants.Core.Interfaces;
+using Demo.Restuarants.Shared.Models;
 
 namespace Demo.Resuarants.API.NUnit.Tests.Controllers.V1;
 

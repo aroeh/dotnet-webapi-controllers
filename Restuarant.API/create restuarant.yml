@@ -5,7 +5,11 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/api/restuarant/{{api-version}}"
+  url: "{{host}}/api/restuarant?api-version={{api-version}}"
+  params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
   body:
     type: json
     data: |-

@@ -1,6 +1,12 @@
+using Demo.Restuarants.API.SDK;
 using WebApiHttpClient.HttpClientHelpers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Configuration
+    .SetBasePath(Directory.GetCurrentDirectory())
+    .AddJsonFile("appsettings.json")
+    .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json");
 
 // Add services to the container.
 
@@ -8,18 +14,21 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
-// register http clients for the app
-string restuarantBaseAddress = Environment.GetEnvironmentVariable("RESTUARANT_API") ?? "http://localhost";
-Uri uri = new(restuarantBaseAddress);
+// register custom http clients for the app
+//string restuarantBaseAddress = Environment.GetEnvironmentVariable("RESTUARANT_API") ?? "http://localhost";
+//Uri uri = new(restuarantBaseAddress);
+
 // add a typed HttpClient
-builder.Services.AddHttpClient<HttpClientHelper>(c => c.BaseAddress = uri);
+//builder.Services.AddHttpClient<HttpClientHelper>(c => c.BaseAddress = uri);
 
 // add a named IHttpClientFactory
-builder.Services.AddHttpClient("restuarantClient", client =>
-{
-    client.BaseAddress = uri;
-});
-builder.Services.AddTransient<HttpFactoryHelper>();
+//builder.Services.AddHttpClient("restuarantClient", client =>
+//{
+//    client.BaseAddress = uri;
+//});
+//builder.Services.AddTransient<HttpFactoryHelper>();
+
+builder.Services.AddRestuarantApi(builder.Configuration);
 
 var app = builder.Build();
 

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -19,9 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Demo.Restuarants.API.Core\Demo.Restuarants.API.Core.csproj" />
-    <ProjectReference Include="..\Demo.Restuarants.API.MongoDb.Infrastructure\Demo.Restuarants.API.MongoDb.Infrastructure.csproj" />
-    <ProjectReference Include="..\Demo.Restuarants.API.Shared\Demo.Restuarants.API.Shared.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.API.Models\Demo.Restuarants.API.Models.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.Core\Demo.Restuarants.Core.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.Infrastructure.MongoDb\Demo.Restuarants.Infrastructure.MongoDb.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.Shared\Demo.Restuarants.Shared.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,6 +1,8 @@
 ﻿using Demo.Restuarants.API.Controllers.V2;
 using Demo.Restuarants.API.Models.V2;
-using Demo.Restuarants.API.Shared.Models.V2;
+using Demo.Restuarants.Core.Interfaces;
+using Demo.Restuarants.Shared.Models;
+using Demo.Restuarants.Shared.Models.V2;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;

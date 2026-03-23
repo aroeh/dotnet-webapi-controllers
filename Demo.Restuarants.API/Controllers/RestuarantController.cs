@@ -1,14 +1,14 @@
 ﻿using Asp.Versioning;
-using Demo.Restuarants.API.Core.Interfaces;
 using Demo.Restuarants.API.Extensions;
 using Demo.Restuarants.API.Models;
-using Demo.Restuarants.API.Shared.Models;
+using Demo.Restuarants.Core.Interfaces;
+using Demo.Restuarants.Shared.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Demo.Restuarants.API.Controllers;
 
-[ApiVersion("3.0")]
-[Route("api/[controller]/v{version:apiVersion}")]
+[ApiVersion(ApiVersions.Latest)]
+[Route("api/[controller]")]
 public class RestuarantController
 (
     ILogger<RestuarantController> log,

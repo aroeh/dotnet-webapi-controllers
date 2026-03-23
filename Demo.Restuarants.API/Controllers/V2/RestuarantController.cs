@@ -1,9 +1,9 @@
 ﻿using Asp.Versioning;
-using Demo.Restuarants.API.Core.Interfaces;
 using Demo.Restuarants.API.Middleware;
 using Demo.Restuarants.API.Models.V2;
-using Demo.Restuarants.API.Shared.Models;
-using Demo.Restuarants.API.Shared.Models.V2;
+using Demo.Restuarants.Core.Interfaces;
+using Demo.Restuarants.Shared.Models;
+using Demo.Restuarants.Shared.Models.V2;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -26,7 +26,7 @@ namespace Demo.Restuarants.API.Controllers.V2;
 [ApiController]
 [ApiVersion("2.0", Deprecated = true)]
 [Produces("application/json")]
-[Route("[controller]/v{version:apiVersion}")]
+[Route("[controller]")]
 public class RestuarantController : ControllerBase
 {
     private readonly ILogger<RestuarantController> logger;

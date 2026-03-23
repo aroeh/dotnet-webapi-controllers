@@ -5,7 +5,11 @@ info:
 
 http:
   method: PATCH
-  url: "{{host}}/api/restuarant/{{api-version}}/{restuarantId}"
+  url: "{{host}}/api/restuarant/{restuarantId}?api-version={{api-version}}"
+  params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
   body:
     type: json
     data: |-

@@ -39,19 +39,19 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - ASPNETCORE_ENVIRONMENT=Docker
   
-  httpapi:
-    image: ${DOCKER_REGISTRY-}httpclientapi
-    container_name: http-api
-    networks:
-      - backend
-    build:
-      context: .
-      dockerfile: WebApiHttpClient/Dockerfile
-    ports:
-      - 5062:80
-    depends_on:
-      - restuarantapi
-    environment:
-      - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_ENVIRONMENT=Development
-      - RESTUARANT_API=http://restuarantapi
+  # httpapi:
+  #   image: ${DOCKER_REGISTRY-}httpclientapi
+  #   container_name: http-api
+  #   networks:
+  #     - backend
+  #   build:
+  #     context: .
+  #     dockerfile: WebApiHttpClient/Dockerfile
+  #   ports:
+  #     - 5062:80
+  #   depends_on:
+  #     - restuarantapi
+  #   environment:
+  #     - ASPNETCORE_URLS=http://+:80
+  #     - ASPNETCORE_ENVIRONMENT=Development
+  #     - RESTUARANT_API=http://restuarantapi
