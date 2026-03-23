@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/api/restuarant"
+  url: "{{host}}/api/restuarant/{{api-version}}"
   body:
     type: json
     data: |-

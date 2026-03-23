@@ -5,7 +5,7 @@ info:
 
 http:
   method: GET
-  url: "{{host}}/api/restuarant/{restuarantId}"
+  url: "{{host}}/api/restuarant/{{api-version}}/{restuarantId}"
   auth: inherit
 
 settings:
