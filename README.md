@@ -241,7 +241,7 @@ reportgenerator -reports:"TestResults\<GUID>\coverage.cobertura.xml" -targetdir:
 - [Http Client Factory](https://learn.microsoft.com/en-us/dotnet/core/extensions/httpclient-factory)
 - [Rob Rich Presentations](https://robrich.org/presentations)
 - [Rob Rich XUnit Testing](https://github.com/robrich/net-testing-xunit-moq/blob/main/done/LightController.Tests/LightActuator_ActuateLights.cs)
-
+- [Refit GitHub](https://github.com/reactiveui/refit)
 
 
 Create a new Blazor application that will consume the V2 endpoints from the WebApiControllers project
