@@ -1,0 +1,15 @@
+info:
+  name: delete restuarant
+  type: http
+  seq: 6
+
+http:
+  method: DELETE
+  url: "{{host}}/api/restuarant/{restuarantId}"
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

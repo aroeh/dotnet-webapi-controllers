@@ -32,7 +32,7 @@ services:
       context: . # context at the root is the path containing the compose file
       dockerfile: Demo.Restuarants.API/Dockerfile
     ports:
-      - 5112:80
+      - 5017:80
     depends_on:
       - mongo
     environment:
