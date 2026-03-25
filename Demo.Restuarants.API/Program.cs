@@ -1,6 +1,6 @@
 using Demo.Restuarants.API.Middleware;
-using Demo.Restuarants.API.MongoDb.Infrastructure.Extensions;
 using Demo.Restuarants.Core.Extensions;
+using Demo.Restuarants.Infrastructure.MongoDb.Extensions;
 using Demo.Restuarants.Infrastructure.MongoDb.Health;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Http.Json;

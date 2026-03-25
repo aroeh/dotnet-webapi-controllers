@@ -5,7 +5,7 @@ using Demo.Restuarants.Infrastructure.MongoDb.Repos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Demo.Restuarants.API.MongoDb.Infrastructure.Extensions;
+namespace Demo.Restuarants.Infrastructure.MongoDb.Extensions;
 
 public static class ServiceCollectionExtensions
 {
