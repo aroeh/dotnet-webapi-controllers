@@ -24,7 +24,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=hunter2
   
   restuarantapi:
-    image: ${DOCKER_REGISTRY-}controllerapi
+    image: ${DOCKER_REGISTRY-}restuarantdemoapi
     container_name: restuarant-api
     networks:
       - backend

@@ -8,7 +8,7 @@ WORKDIR /src
 
 COPY ["Demo.Restuarants.API/Demo.Restuarants.API.csproj", "Demo.Restuarants.API/Demo.Restuarants.API/"]
 COPY ["Demo.Restuarants.Core/Demo.Restuarants.Core.csproj", "Demo.Restuarants.Core/Demo.Restuarants.Core/"]
-COPY ["Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.Infrastructure.MongoDb.csproj", "Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.InfrastructureMongoDb/"]
+COPY ["Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.Infrastructure.MongoDb.csproj", "Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.Infrastructure.MongoDb/"]
 COPY ["Demo.Restuarants.Shared/Demo.Restuarants.Shared.csproj", "Demo.Restuarants.Shared/Demo.Restuarants.Shared/"]
 
 RUN dotnet restore "./Demo.Restuarants.API/Demo.Restuarants.API/Demo.Restuarants.API.csproj"
