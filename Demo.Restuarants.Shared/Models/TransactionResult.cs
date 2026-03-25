@@ -1,26 +1,28 @@
 ﻿namespace Demo.Restuarants.Shared.Models;
 
+/// <summary>
+/// Definition of transaction details
+/// </summary>
+/// <param name="TransactionRun">Represents if the transaction was run</param>
+/// <param name="IsAcknowledged">Represents if the transaction was acknowledged by the Database</param>
+/// <param name="ExpectedRecordCount">The number of records that were expected to be handled in the transaction</param>
+/// <param name="ActualRecordCount">The actual number of records that were impacted in the transaction</param>
 public record TransactionResult
+(
+    bool TransactionRun,
+    bool IsAcknowledged,
+    long ExpectedRecordCount,
+    long ActualRecordCount
+)
 {
-    /// <summary>
-    /// Represents if the transaction was run
-    /// </summary>
-    public bool TransactionRun { get; set; }
+    public TransactionResult() : this(false, false, 0, 0)
+    { }
 
-    /// <summary>
-    /// Represents if the transaction was acknowledged by the MongoDB Database
-    /// </summary>
-    public bool IsAcknowledged { get; set; }
+    public TransactionResult(long expectedRecordCount) : this(false, false, expectedRecordCount, 0)
+    { }
 
-    /// <summary>
-    /// The number of records that were expected to be handled in the transaction
-    /// </summary>
-    public long ExpectedRecordCount { get; set; }
-
-    /// <summary>
-    /// The actual number of records that were impacted in the transaction
-    /// </summary>
-    public long ActualRecordCount { get; set; }
+    public TransactionResult(bool transactionRun, long expectedRecordCount, long actualRecordCount) : this(transactionRun, false, expectedRecordCount, actualRecordCount)
+    { }
 
     /// <summary>
     /// Success indicator.  Success is defined as true if 

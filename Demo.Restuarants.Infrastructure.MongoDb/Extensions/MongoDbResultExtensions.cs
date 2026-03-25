@@ -8,33 +8,33 @@ internal static class MongoDbResultExtensions
     internal static TransactionResult ToMongoTransactionResult(this ReplaceOneResult result, long expectedRecordCount = 1, bool transactionRun = true)
     {
         return new TransactionResult
-        {
-            TransactionRun = transactionRun,
-            IsAcknowledged = result.IsAcknowledged,
-            ExpectedRecordCount = expectedRecordCount,
-            ActualRecordCount = result.ModifiedCount
-        };
+        (
+            transactionRun,
+            result.IsAcknowledged,
+            expectedRecordCount,
+            result.ModifiedCount
+        );
     }
 
     internal static TransactionResult ToMongoTransactionResult(this UpdateResult result, long expectedRecordCount = 1, bool transactionRun = true)
     {
         return new TransactionResult
-        {
-            TransactionRun = transactionRun,
-            IsAcknowledged = result.IsAcknowledged,
-            ExpectedRecordCount = expectedRecordCount,
-            ActualRecordCount = result.ModifiedCount
-        };
+        (
+            transactionRun,
+            result.IsAcknowledged,
+            expectedRecordCount,
+            result.ModifiedCount
+        );
     }
 
     internal static TransactionResult ToMongoTransactionResult(this DeleteResult result, long expectedRecordCount, bool transactionRun = true)
     {
         return new TransactionResult
-        {
-            TransactionRun = transactionRun,
-            IsAcknowledged = result.IsAcknowledged,
-            ExpectedRecordCount = expectedRecordCount,
-            ActualRecordCount = result.DeletedCount
-        };
+        (
+            transactionRun,
+            result.IsAcknowledged,
+            expectedRecordCount,
+            result.DeletedCount
+        );
     }
 }
