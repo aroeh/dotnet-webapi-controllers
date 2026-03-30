@@ -1,9 +1,4 @@
 <Solution>
-  <Folder Name="/Tests/">
-    <Project Path="Demo.Restuarants.API.XUnit.Tests/Demo.Restuarants.API.XUnit.Tests.csproj" />
-    <Project Path="Demo.Resuarants.API.MsTests.Tests/Demo.Resuarants.API.MsTests.Tests.csproj" />
-    <Project Path="Demo.Resuarants.API.NUnit.Tests/Demo.Resuarants.API.NUnit.Tests.csproj" />
-  </Folder>
   <Project Path="Demo.Restuarants.API/Demo.Restuarants.API.csproj" />
   <Project Path="Demo.Restuarants.API.Models/Demo.Restuarants.API.Models.csproj" Id="2f97261b-2ddc-4ef1-b304-aff171dae535" />
   <Project Path="Demo.Restuarants.API.SDK/Demo.Restuarants.API.SDK.csproj" Id="663be9c2-dcae-483a-a349-6302c3db3229" />
