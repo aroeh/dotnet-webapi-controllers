@@ -3,6 +3,7 @@
   <Project Path="Demo.Restuarants.API.Models/Demo.Restuarants.API.Models.csproj" Id="2f97261b-2ddc-4ef1-b304-aff171dae535" />
   <Project Path="Demo.Restuarants.API.SDK/Demo.Restuarants.API.SDK.csproj" Id="663be9c2-dcae-483a-a349-6302c3db3229" />
   <Project Path="Demo.Restuarants.Core/Demo.Restuarants.Core.csproj" />
+  <Project Path="Demo.Restuarants.Infrastructure.Azure/Demo.Restuarants.Infrastructure.Azure.csproj" Id="a120ba60-a375-4bea-b200-e5afa768b17a" />
   <Project Path="Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.Infrastructure.MongoDb.csproj" />
   <Project Path="Demo.Restuarants.Shared/Demo.Restuarants.Shared.csproj" />
   <Project Path="WebApiHttpClient/WebApiHttpClient.csproj" />

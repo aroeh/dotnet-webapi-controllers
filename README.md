@@ -5,19 +5,13 @@ This project is intended to be used for educational and reference purposes and w
 - Clean Architecture concept
 - Global Exception Handling
 - Health Checks on dependent services
-- Controller Output Caching
-- API Versioning by URL Path
+- API Versioning by Query String
 - Dependency Injection
 - HSTS Security Headers
 - Typed HttpClient via a wrapper class using generics
 - Named HttpClientFactory via a wrapper class using generics
 - using http files and external variables
 - Docker container and Docker Compose
-- Utilizing global usings in unit tests
-- XUnit tests - tests on all classes
-- NUnit tests - only on controllers to show syntax
-- MSTest tests - only on controllers to show syntax
-- Mocking HttpContext for controller unit tests
 - Collecting Coverage Locally without needing Visual Studio Enterprise
 - Logging
     - High Performance Logging with LoggerMessage
@@ -25,29 +19,84 @@ This project is intended to be used for educational and reference purposes and w
 - TODO: Open API Documentation on endpoints
 
 # Dependencies
+- Azure
 - MongoDB
 - Docker
 - Docker Compose V2
 
 # Getting Started
-This project has a dependency on MongoDB.  You can either use a deployed MongoDB Atlas instance and a connection to connect, or you can use a containerized instance of MongoDB.
+This project has a dependency on MongoDB via a containerized instance of MongoDB.  The MongoDb project uses the options pattern to read values from app configuration and make them available for dependency injection.  This enables us to keep the setup within the Infrastructure project and easily find references to the options type to find where it is used.  See the following sections to setup the local credentials for the MongoDB container and Azure App Configuration.
 
-View the MongoService.cs file and review the constructor.  Identify how you will be retrieving your connection string and either comment/uncomment the lines present or alter the code.
+## Docker Environment File
+Currently volume binding to read user secrets for the .Net app is not working.  This is a workaround solution until I get that or something better working for reading secrets in the docker container.  Currently the only secret needed will be the Azure App Configuration Connection String.
 
-This project is locally setup to use a MongoDB Docker Container.  The connection string is setup both in the docker-compose.yaml as well as in the launchSettings.json profiles via Environment Variables.  If you choose to use secrets, you will need to update the code and remove the Environment variables and change the MongoService to use the secrets location.
+Both a compose.yaml and compose.override.yaml are setup within the solution to set service configurations and extend them for the development environment.  The compose.override.yaml requires variables to be set and it is recommended to create a .env file so the secrets will not be commited to the code repository.
 
-## MongoDB Atlas
-1. Signup for MongoDB if you do not already have an account - Use the free tier of the service
-2. Create a new project and database
-3. Get the connection string to the database and store somewhere secure, ex: local secrets config file
-4. Create a new collection in the database
-5. Build and Run the API
-6. Use .http files or Postman to send requests to the API
+1. In the same directory containing the compose.yaml, create a new file and name it `dev.env`
+```
+dev.env
+```
+
+2. Add the following to the .env file
+```
+# Restuarant API Variables
+USER_SECRETS_PATH=${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+APP_CONFIG=<your-app-config-connection-string>
+
+# DB Variables
+MONGO_USERNAME=<mongo-username>
+MONGO_PASSWORD=<mongo-password>
+```
+
 
 ## MongoDB Container
-1. Build all images and containers from the docker-compose.yaml file
-2. Run the containers using docker-compose.yaml
-3. Use .http files or Postman to send requests to the API
+1. For the container choose a username and password and make note of it, as it will be used in the Azure App Configuration
+
+> For local development you can use any values you want for the container, but some tutorial values commonly used are as follows: 
+```
+UserName: AzureDiamond
+Password: hunter2
+```
+
+> DO NOT STORE THESE IN THE CODE REPOSITORY OR USE IN A PRODUCTION SCENARIO
+
+2. Update the `dev.env` file with the MongoDB username and password that you want to use
+```
+MONGO_USERNAME=<mongo-username>
+MONGO_PASSWORD=<mongo-password>
+```
+
+
+## Azure App Configuration
+1. Signup for an Azure Subscription if you do not already have an account [Azure Portal](https://portal.azure.com)
+2. Create a new Subscription for resources - Use the lowest cost tier, Free should be available for all items in these steps
+3. Create a new Resource Group
+4. Create a new App Configuration Resource
+    * Use the subscription and resource group 
+    * Provide a unique name for the app configuration
+    * Select your pricing tier: We're using Free
+    * Enable access keys to use a connection string for authentication and connecting
+        > The Connection string is the easiest way to start for local development, and should not be used in a Production scenario
+    * Use the Automatic Network Access options
+5. Setup the API Project with User Secrets for connecting to the App Configuration
+```
+dotnet user-secrets init
+dotnet user-secrets set AppConfiguration:Endpoint "<your-App-Configuration-endpoint>"
+dotnet user-secrets set AppConfiguration:ConnectionString "<your-App-Configuration-connection-string>"
+```
+
+6. Create the following keys replacing both the `<mongo-username>` and `<mongo-password>` with your chosen username and password
+
+| Key | Value | Label |
+| --- | ----- | ----- |
+| RestuarantApi:Settings:HealthEndpoint | /healthz | No Label |
+| RestuarantApi:Settings:MongoDb:ConnectionString | `mongodb://<mongo-username>:<mongo-password>@localhost:27017` | Development |
+| RestuarantApi:Settings:MongoDb:ConnectionString | `mongodb://<mongo-username>:<mongo-password>@mongo:27017` | Docker |
+| RestuarantApi:Settings:MongoDb:DatabaseName | restuarants | Development |
+| RestuarantApi:Settings:MongoDb:DatabaseName | restuarants | Docker |
+
+7. Update the `dev.env` and set the `APP_CONFIG` variable with the Azure App Config connection string.  Replace `<your-app-config-connection-string>` with the connection string for your Azure App Configuration Service
+> DO NOT STORE THE CONNECTION STRING IN THE CODE REPOSITORY OR USE IN A PRODUCTION SCENARIO
 
 
 # Run the Solution
@@ -107,10 +156,15 @@ docker compose build
 
 2. Compose up the containers
 ```
-docker compose up
+docker compose --env-file dev.env up
 ```
 > If you do not want to debug, the add the -d parameter.  `docker compose up -d`
 > docker compose up will also build all images if they do not exist, so step 1 is optional
+
+> By default docker will read from both the compose.yaml and compose.override.yaml.  To different files use the `-f` parameter.  ex: 
+```
+docker compose -f compose.yaml -f compose.override.yaml --env-file dev.env up
+```
 
 3. Use an http client like Postman or the http files in Visual Studio to send requests to the API
 
@@ -132,7 +186,7 @@ docker compose down
 
 > Images can also be deleted using the compose down command
 ```
-docker compose down --rmi "all"
+docker compose --env-file dev.env down --rmi 'all'
 ```
 
 ## Docker
@@ -242,6 +296,4 @@ reportgenerator -reports:"TestResults\<GUID>\coverage.cobertura.xml" -targetdir:
 - [Rob Rich Presentations](https://robrich.org/presentations)
 - [Rob Rich XUnit Testing](https://github.com/robrich/net-testing-xunit-moq/blob/main/done/LightController.Tests/LightActuator_ActuateLights.cs)
 - [Refit GitHub](https://github.com/reactiveui/refit)
-
-
-Create a new Blazor application that will consume the V2 endpoints from the WebApiControllers project
+- [Azure App Configuration](https://learn.microsoft.com/en-us/azure/azure-app-configuration/quickstart-aspnet-core-app)

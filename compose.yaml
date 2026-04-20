@@ -18,27 +18,17 @@ services:
     restart: always
     networks:
       - backend
-    ports:
-      - 27017:27017
-    environment:
-      - MONGO_INITDB_ROOT_USERNAME=AzureDiamond
-      - MONGO_INITDB_ROOT_PASSWORD=hunter2
   
   restuarantapi:
-    image: ${DOCKER_REGISTRY-}controllerapi
+    image: ${DOCKER_REGISTRY-}restuarantdemoapi
     container_name: restuarant-api
     networks:
       - backend
     build:
       context: . # context at the root is the path containing the compose file
       dockerfile: Demo.Restuarants.API/Dockerfile
-    ports:
-      - 5017:80
     depends_on:
       - mongo
-    environment:
-      - ASPNETCORE_URLS=http://+:80
-      - ASPNETCORE_ENVIRONMENT=Docker
   
   # httpapi:
   #   image: ${DOCKER_REGISTRY-}httpclientapi

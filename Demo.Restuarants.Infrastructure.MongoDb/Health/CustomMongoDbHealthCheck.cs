@@ -1,32 +1,33 @@
 ﻿using Demo.Restuarants.Infrastructure.MongoDb.Options;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MongoDB.Driver;
 using System.Diagnostics;
 
 namespace Demo.Restuarants.Infrastructure.MongoDb.Health;
 
-public class CustomMongoDbHealthCheck(ILogger logger, IOptions<MongoDbOptions> options) : IHealthCheck
+public class CustomMongoDbHealthCheck(IOptions<MongoDbOptions> options) : IHealthCheck
 {
     public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken token = new())
     {
         try
         {
             // the connection check returns a Dictionary of data that can be passed into the health check result and displayed in the response
-            Dictionary<string, object> connectionCheckResults = await CheckConnection(token);
+            ConnectionResults connectionCheckResults = await CheckConnection(token);
 
-            // check for a duration of time on the connection - is past a certain point, consider the service degraded
-            if (connectionCheckResults.TryGetValue("TestDuration", out object? value))
+            // check if a connection was made
+            if (connectionCheckResults.ConnectionResult)
             {
-                TimeSpan duration = (TimeSpan)value;
-                if (duration.Seconds > 4)
+                // check for a duration of time on the connection - is past a certain point, consider the service degraded
+                if (connectionCheckResults.TestDuration.Seconds > 4)
                 {
-                    return HealthCheckResult.Degraded("Database Connection is Degraded - Response from the connection is Slow", null, connectionCheckResults);
+                    return HealthCheckResult.Degraded("Database Connection is Degraded - Response from the connection is Slow", null, connectionCheckResults.ToDictionary());
                 }
+
+                return HealthCheckResult.Healthy("Database Connection is Healthy", connectionCheckResults.ToDictionary());
             }
 
-            return HealthCheckResult.Healthy("Database Connection is Healthy", connectionCheckResults);
+            return HealthCheckResult.Unhealthy("Unable to connect to the database", null, connectionCheckResults.ToDictionary());
         }
         catch (Exception ex)
         {
@@ -34,35 +35,59 @@ public class CustomMongoDbHealthCheck(ILogger logger, IOptions<MongoDbOptions> o
         }
     }
 
-    private async Task<Dictionary<string, object>> CheckConnection(CancellationToken token)
+    private async Task<ConnectionResults> CheckConnection(CancellationToken token)
     {
         MongoClient client = new(options.Value.ConnectionString);
+        long connectionTestStart = Stopwatch.GetTimestamp();
+        TimeSpan connectionTestDuration;
 
         try
         {
-            long connectionTestStart = Stopwatch.GetTimestamp();
             var dbNames = await client.ListDatabaseNamesAsync(token);
-            TimeSpan connectionTestDuration = Stopwatch.GetElapsedTime(connectionTestStart);
+            connectionTestDuration = Stopwatch.GetElapsedTime(connectionTestStart);
 
-            Dictionary<string, object> data = [];
-
-            if (dbNames is not null)
+            return new ConnectionResults()
             {
-                data.Add("Connected", true);
-                data.Add("TestDuration", connectionTestDuration);
-            }
-
-            return data;
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(99, ex, "Unable to establish database connection");
-            Dictionary<string, object> errorData = new()
-            {
-                { "ErrorCode", 99 },
-                { "Connected", false }
+                ConnectionResult = dbNames is not null,
+                TestDuration = connectionTestDuration
             };
-            return errorData;
+        }
+        catch (TimeoutException)
+        {
+            connectionTestDuration = Stopwatch.GetElapsedTime(connectionTestStart);
+            return new ConnectionResults()
+            {
+                ConnectionResult = false,
+                TestDuration = connectionTestDuration,
+                Message = "A timeout occurred while trying to connect to the database."
+            };
+        }
+        catch (Exception)
+        {
+            connectionTestDuration = Stopwatch.GetElapsedTime(connectionTestStart);
+            return new ConnectionResults()
+            {
+                ConnectionResult = false,
+                TestDuration = connectionTestDuration,
+                Message = "An unhandled error occurred while connecting to the database."
+            };
+        }
+    }
+
+    private record ConnectionResults
+    {
+        internal bool ConnectionResult { get; set; }
+        internal TimeSpan TestDuration { get; set; }
+        internal string Message { get; set; } = string.Empty;
+
+        internal Dictionary<string, object> ToDictionary()
+        {
+            return new Dictionary<string, object>
+            {
+                { "Connected", ConnectionResult },
+                { "TestDuration", TestDuration },
+                { "Message", Message }
+            };
         }
     }
 }

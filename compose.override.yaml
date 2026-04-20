@@ -1,0 +1,17 @@
+services:
+  mongo:
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_PASSWORD}
+
+  restuarantapi:
+      ports:
+        - 5017:80
+      environment:
+        - ASPNETCORE_URLS=http://+:80
+        - ASPNETCORE_ENVIRONMENT=Docker
+        - AppConfiguration:ConnectionString=${APP_CONFIG}
+      volumes:
+        - ${USER_SECRETS_PATH}

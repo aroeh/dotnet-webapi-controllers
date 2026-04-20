@@ -1,5 +1,6 @@
 using Demo.Restuarants.API.Middleware;
 using Demo.Restuarants.Core.Extensions;
+using Demo.Restuarants.Infrastructure.Azure.Extensions;
 using Demo.Restuarants.Infrastructure.MongoDb.Extensions;
 using Demo.Restuarants.Infrastructure.MongoDb.Health;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -8,19 +9,20 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Console.WriteLine($"Environment: {builder.Environment.EnvironmentName}");
+
 // Read appsettings files
 builder.Configuration
     .SetBasePath(Directory.GetCurrentDirectory())
     .AddJsonFile("appsettings.json")
     .AddJsonFile($"appsettings.{Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT")}.json")
+    .AddUserSecrets<Program>()
     .AddEnvironmentVariables();
 
-// Add services to the container.
+// get app settings from Azure App Configuration
+builder.Configuration.AddAzureAppConfigSettings(builder.Services, builder.Environment.EnvironmentName);
 
-//TODO: Figure out how to get reading from Azure App Config working
-//string connectionString = builder.Configuration.GetConnectionString("AppConfig");
-//builder.Configuration.AddAzureAppConfiguration(connectionString);
-//builder.Services.Configure<>(builder.Configuration.GetSection("TestApp:Settings"));
+// Add services to the container.
 
 // configure authoriation and authentication for the API with Microsoft EntraID
 //builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -89,10 +91,14 @@ app.UseExceptionHandler();
 app.UseHttpsRedirection();
 
 // map the health check endpoint and setup a custom writer
-app.MapHealthChecks("/health", new HealthCheckOptions
+string healthCheckEndpoint = builder.Configuration.GetValue<string>("RestuarantApi:Settings:HealthEndpoint") ?? "zz";
+Console.WriteLine($"Health Check Endpoint: {healthCheckEndpoint}");
+app.MapHealthChecks(healthCheckEndpoint, new HealthCheckOptions
 {
     ResponseWriter = HealthCheckResponseWriter.WriteCustomHealthCheckResponse
 });
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

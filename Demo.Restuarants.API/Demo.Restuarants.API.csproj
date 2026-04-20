@@ -4,12 +4,14 @@
     <TargetFramework>net10.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>2ce0a781-128a-4ca1-862e-0f8ba78a89d3</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.1" />
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.6" />
+    <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="8.5.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Demo.Restuarants.API.Models\Demo.Restuarants.API.Models.csproj" />
     <ProjectReference Include="..\Demo.Restuarants.Core\Demo.Restuarants.Core.csproj" />
+    <ProjectReference Include="..\Demo.Restuarants.Infrastructure.Azure\Demo.Restuarants.Infrastructure.Azure.csproj" />
     <ProjectReference Include="..\Demo.Restuarants.Infrastructure.MongoDb\Demo.Restuarants.Infrastructure.MongoDb.csproj" />
     <ProjectReference Include="..\Demo.Restuarants.Shared\Demo.Restuarants.Shared.csproj" />
   </ItemGroup>
