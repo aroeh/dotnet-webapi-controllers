@@ -40,6 +40,7 @@ public class RestuarantController
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
     [HttpGet("{id}")]
+    [ActionName(nameof(GetRestuarantAsync))]
     public async Task<IResult> GetRestuarantAsync([FromRoute] string id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Get restuarant request received");
@@ -63,10 +64,26 @@ public class RestuarantController
     public async Task<IResult> CreateRestuarantAsync([FromBody] CreateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Add restuarant request received");
-        RestuarantBO restuarant = await _orchestration.CreateRestuarantAsync(request.ToCreateRestuarantRequestBO(),cancellationToken);
+        RestuarantBO restuarant = await _orchestration.CreateRestuarantAsync(request.ToCreateRestuarantRequestBO(), cancellationToken);
 
-        return TypedResults.Created(HttpContext.Request.Path.Value, restuarant);
+        // Best practice to use the path and the id to return in the header and point to the resource
+        return TypedResults.Created($"{HttpContext.Request.Path.Value}/{restuarant.Id}", restuarant);
     }
+    /*
+     * This method could be written using IActionResult and related method, in fact all methods in this controller could be written to use IAction Result.
+     * The IResult matches the same return type as minimal apis and that's the only reason it was used here.  Both work great.
+     * 
+     * Here's what the create method would look like using IActionResult
+     * Notice the CreatedAtAction - with methods using an Async Suffix you will need to set the ActionName attribute on the name of the method being referenced
+     * see the GetRestuarantAsync for the implementation
+        public async Task<IActionResult> CreateRestuarantAsync([FromBody] CreateRestuarantRequest request, CancellationToken cancellationToken = default)
+        {
+            _logger.LogInformation("Add restuarant request received");
+            RestuarantBO restuarant = await _orchestration.CreateRestuarantAsync(request.ToCreateRestuarantRequestBO(), cancellationToken);
+
+            return CreatedAtAction(nameof(GetRestuarantAsync), new { id = restuarant.Id }, restuarant);
+        }
+     */
 
     /// <summary>
     /// Creates many new restuarants
