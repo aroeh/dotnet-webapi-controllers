@@ -18,10 +18,10 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// <param name="queryParameters">Optional - Query parameters to filter restuarants</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Paginated list of restuarants matching <paramref name="queryParameters"/></returns>
-    public async Task<PaginationResponse<RestuarantBO>> ListRestuarants(FilterQueryParametersBO queryParameters, CancellationToken cancellationToken)
+    public async Task<PaginationResponse<RestuarantBO>> ListRestuarantsAsync(FilterQueryParametersBO queryParameters, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Querying restuarants");
-        return await _repo.QueryRestuarants(queryParameters, cancellationToken);
+        return await _repo.QueryRestuarantsAsync(queryParameters, cancellationToken);
     }
 
     /// <summary>
@@ -30,10 +30,10 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// <param name="id">Id of the restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
-    public async Task<RestuarantBO?> GetRestuarant(string id, CancellationToken cancellationToken)
+    public async Task<RestuarantBO?> GetRestuarantAsync(string id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Getting restuarant by id");
-        return await _repo.GetRestuarant(id, cancellationToken);
+        return await _repo.GetRestuarantAsync(id, cancellationToken);
     }
 
     /// <summary>
@@ -42,13 +42,13 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// <param name="request">Restuarant properties and data</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant object updated with the new id</returns>
-    public async Task<RestuarantBO> CreateRestuarant(CreateRestuarantRequestBO request, CancellationToken cancellationToken)
+    public async Task<RestuarantBO> CreateRestuarantAsync(CreateRestuarantRequestBO request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Adding new restuarant");
         string newId = IdGenerator.GenerateId();
         RestuarantBO restuarant = request.MapToRestuarant(newId);
 
-        return await _repo.CreateRestuarant(restuarant, cancellationToken);
+        return await _repo.CreateRestuarantAsync(restuarant, cancellationToken);
     }
 
     /// <summary>
@@ -57,7 +57,7 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// <param name="requests">Collection of create restuarant requests</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    public async Task<TransactionResult> CreateManyRestuarants(CreateRestuarantRequestBO[] requests, CancellationToken cancellationToken)
+    public async Task<TransactionResult> CreateManyRestuarantsAsync(CreateRestuarantRequestBO[] requests, CancellationToken cancellationToken)
     {
         RestuarantBO[] requestCollection = new RestuarantBO[requests.Length];
         for (int i = 0; i < requests.Length; i++)
@@ -68,7 +68,7 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
         }
 
         _logger.LogInformation("Adding new restuarant");
-        return await _repo.CreateManyRestuarants(requestCollection, cancellationToken);
+        return await _repo.CreateManyRestuarantsAsync(requestCollection, cancellationToken);
     }
 
     /// <summary>
@@ -78,12 +78,12 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// <param name="request">Restuarant properties to update</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
-    public async Task<bool> UpdateRestuarant(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken)
+    public async Task<bool> UpdateRestuarantAsync(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken)
     {
-        _ = await GetRestuarant(id, cancellationToken) ?? throw new Exception("Restuarant does not exist.  Unable to update.");
+        _ = await GetRestuarantAsync(id, cancellationToken) ?? throw new Exception("Restuarant does not exist.  Unable to update.");
 
         _logger.LogInformation("Updating restuarant");
-        TransactionResult result = await _repo.UpdateRestuarant(id, request, cancellationToken);
+        TransactionResult result = await _repo.UpdateRestuarantAsync(id, request, cancellationToken);
         return result.Success;
     }
 
@@ -93,10 +93,10 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// <param name="id">Id of the restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
-    public async Task<bool> RemoveRestuarant(string id, CancellationToken cancellationToken)
+    public async Task<bool> RemoveRestuarantAsync(string id, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Removing restuarant");
-        TransactionResult result = await _repo.RemoveRestuarant(id, cancellationToken);
+        TransactionResult result = await _repo.RemoveRestuarantAsync(id, cancellationToken);
         return result.Success;
     }
 }

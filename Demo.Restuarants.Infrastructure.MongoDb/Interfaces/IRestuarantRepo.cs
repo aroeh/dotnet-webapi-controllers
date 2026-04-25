@@ -10,7 +10,7 @@ public interface IRestuarantRepo
     /// <param name="queryParameters">Optional - Query parameters to filter restuarants</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Paginated collection of restuarant records matching <paramref name="queryParameters"/></returns>
-    Task<PaginationResponse<RestuarantBO>> QueryRestuarants(FilterQueryParametersBO queryParameters, CancellationToken cancellationToken);
+    Task<PaginationResponse<RestuarantBO>> QueryRestuarantsAsync(FilterQueryParametersBO queryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get restuarant by id
@@ -18,7 +18,7 @@ public interface IRestuarantRepo
     /// <param name="id">Id of the restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
-    Task<RestuarantBO?> GetRestuarant(string id, CancellationToken cancellationToken);
+    Task<RestuarantBO?> GetRestuarantAsync(string id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates a new Restuarant
@@ -26,7 +26,7 @@ public interface IRestuarantRepo
     /// <param name="restuarant">Restuarant properties and data</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant object updated with the new id</returns>
-    Task<RestuarantBO> CreateRestuarant(RestuarantBO restuarant, CancellationToken cancellationToken);
+    Task<RestuarantBO> CreateRestuarantAsync(RestuarantBO restuarant, CancellationToken cancellationToken);
 
     /// <summary>
     /// Create many new Restuarants
@@ -34,7 +34,7 @@ public interface IRestuarantRepo
     /// <param name="restuarants">Collection of new restuarants</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    Task<TransactionResult> CreateManyRestuarants(RestuarantBO[] restuarants, CancellationToken cancellationToken);
+    Task<TransactionResult> CreateManyRestuarantsAsync(RestuarantBO[] restuarants, CancellationToken cancellationToken);
 
     /// <summary>
     /// Update an existing restuarant
@@ -43,7 +43,7 @@ public interface IRestuarantRepo
     /// <param name="request">Restuarant properties to update</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    Task<TransactionResult> UpdateRestuarant(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken);
+    Task<TransactionResult> UpdateRestuarantAsync(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a restuarant from the database
@@ -51,5 +51,5 @@ public interface IRestuarantRepo
     /// <param name="id">Id of the restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    Task<TransactionResult> RemoveRestuarant(string id, CancellationToken cancellationToken);
+    Task<TransactionResult> RemoveRestuarantAsync(string id, CancellationToken cancellationToken);
 }
