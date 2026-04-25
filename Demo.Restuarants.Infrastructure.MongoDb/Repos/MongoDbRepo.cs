@@ -27,7 +27,7 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// For this project depending on your resources available - you will need to setup the connection string
     /// </summary>
     /// <param name="logger"></param>
-    /// <param name="config"></param>
+    /// <param name="options"></param>
     public MongoDbRepo(ILogger<MongoDbRepo<TEntity>> logger, IOptions<MongoDbOptions> options)
     {
         _logger = logger;
@@ -46,13 +46,14 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Read only collection of entities matching <paramref name="filter"/></returns>
-    public async Task<IEnumerable<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter)
+    public async Task<IEnumerable<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         _logger.LogInformation("Finding items by Filter");
-        return await collection.Find(filter).ToListAsync();
+        return await collection.Find(filter).ToListAsync(cancellationToken);
     }
 
     /// <summary>
@@ -61,15 +62,17 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="pagination">Pagination parameters</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <remarks>
     /// Uses Offset pagination implementation
     /// </remarks>
     /// <returns>Paginated collection of entities matching <paramref name="filter"/></returns>
-    public async Task<PaginationResponse<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter, PaginationQueryParametersBO pagination)
+    public async Task<PaginationResponse<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter, PaginationQueryParametersBO pagination, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
-        var totalCount = await collection.EstimatedDocumentCountAsync();
+        var totalCount = await collection.EstimatedDocumentCountAsync(null, cancellationToken);
         var skipToPosition = pagination.Page == 1 ? 0 : (pagination.Page - 1) * pagination.PageSize;
 
         _logger.LogInformation("Finding items by Filter");
@@ -77,7 +80,7 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
             .Find(filter)
             .Skip(skipToPosition)
             .Limit(pagination.PageSize)
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
 
         PaginationMetaData metaData = new(pagination.Page, results.Count, pagination.PageSize, totalCount);
         return new PaginationResponse<TEntity>(results, metaData);
@@ -88,13 +91,14 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Instance of a entity matching <paramref name="filter"/></returns>
-    public async Task<TEntity?> GetAsync(string collectionName, FilterDefinition<TEntity> filter)
+    public async Task<TEntity?> GetAsync(string collectionName, FilterDefinition<TEntity> filter, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         _logger.LogInformation("Finding items by Filter");
-        return await collection.Find(filter).FirstOrDefaultAsync();
+        return await collection.Find(filter).FirstOrDefaultAsync(cancellationToken);
     }
 
     /// <summary>
@@ -102,13 +106,14 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="document">Document to be created in the <paramref name="collectionName"/> collection</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Newly created document</returns>
-    public async Task<TEntity> CreateOneAsync(string collectionName, TEntity document)
+    public async Task<TEntity> CreateOneAsync(string collectionName, TEntity document, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         _logger.LogInformation("inserting new document");
-        await collection.InsertOneAsync(document);
+        await collection.InsertOneAsync(document, null, cancellationToken);
         return document;
     }
 
@@ -117,13 +122,14 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="documents">Documents to be created in the <paramref name="collectionName"/> collection</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Operation success result of true or false</returns>
-    public async Task<TransactionResult> CreateManyAsync(string collectionName, IEnumerable<TEntity> documents)
+    public async Task<TransactionResult> CreateManyAsync(string collectionName, IEnumerable<TEntity> documents, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         _logger.LogInformation("inserting new documents");
-        await collection.InsertManyAsync(documents);
+        await collection.InsertManyAsync(documents, null, cancellationToken);
         return new TransactionResult
         {
             TransactionRun = true,
@@ -139,13 +145,14 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="document">Document to be replaced in the <paramref name="collectionName"/> collection</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Replace operation</returns>
-    public async Task<TransactionResult> ReplaceOneAsync(string collectionName, FilterDefinition<TEntity> filter, TEntity document)
+    public async Task<TransactionResult> ReplaceOneAsync(string collectionName, FilterDefinition<TEntity> filter, TEntity document, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         _logger.LogInformation("starting replace operation");
-        ReplaceOneResult result = await collection.ReplaceOneAsync(filter, document);
+        ReplaceOneResult result = await collection.ReplaceOneAsync(filter, document, (ReplaceOptions?)null, cancellationToken);
 
         _logger.LogInformation("operation completed...returning result");
         return result.ToMongoTransactionResult();
@@ -160,12 +167,13 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="update">Update Definition</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Update operation</returns>
-    public async Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update)
+    public async Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
-        UpdateResult result = await collection.UpdateOneAsync(filter, update);
+        UpdateResult result = await collection.UpdateOneAsync(filter, update, null, cancellationToken);
         return result.ToMongoTransactionResult();
     }
 
@@ -178,8 +186,9 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="updates">Collection of Update Definitions for a model</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Update operation</returns>
-    public async Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, List<UpdateDefinition<TEntity>> updates)
+    public async Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, List<UpdateDefinition<TEntity>> updates, CancellationToken cancellationToken)
     {
         if (updates.Count == 0)
         {
@@ -191,7 +200,7 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
         }
 
         var update = Builders<TEntity>.Update;
-        return await UpdateOneAsync(collectionName, filter, update.Combine(updates));
+        return await UpdateOneAsync(collectionName, filter, update.Combine(updates), cancellationToken);
     }
 
     /// <summary>
@@ -199,12 +208,13 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Delete operation</returns>
-    public async Task<TransactionResult> DeleteOneAsync(string collectionName, FilterDefinition<TEntity> filter)
+    public async Task<TransactionResult> DeleteOneAsync(string collectionName, FilterDefinition<TEntity> filter, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
-        DeleteResult result = await collection.DeleteOneAsync(filter);
+        DeleteResult result = await collection.DeleteOneAsync(filter, cancellationToken);
         return result.ToMongoTransactionResult(1);
     }
 
@@ -214,12 +224,13 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="expectedRecords">Expected Number of Records to remove</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Delete operation</returns>
-    public async Task<TransactionResult> DeleteManyAsync(string collectionName, long expectedRecords, FilterDefinition<TEntity> filter)
+    public async Task<TransactionResult> DeleteManyAsync(string collectionName, long expectedRecords, FilterDefinition<TEntity> filter, CancellationToken cancellationToken)
     {
         var collection = _database.GetCollection<TEntity>(collectionName);
 
-        DeleteResult result = await collection.DeleteManyAsync(filter);
+        DeleteResult result = await collection.DeleteManyAsync(filter, cancellationToken);
         return result.ToMongoTransactionResult(expectedRecords);
     }
 }

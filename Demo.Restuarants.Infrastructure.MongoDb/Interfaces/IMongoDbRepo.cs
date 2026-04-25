@@ -19,8 +19,9 @@ public interface IMongoDbRepo<TEntity> where TEntity : class
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Read only collection entities matching <paramref name="filter"/></returns>
-    Task<IEnumerable<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter);
+    Task<IEnumerable<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter, CancellationToken cancellationToken);
 
     /// <summary>
     /// Gets a paginated collection of entities
@@ -28,35 +29,40 @@ public interface IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="pagination">Pagination parameters</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <remarks>
     /// Uses Offset pagination implementation
     /// </remarks>
     /// <returns>Paginated collection of entities matching <paramref name="filter"/></returns>
-    Task<PaginationResponse<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter, PaginationQueryParametersBO pagination);
+    Task<PaginationResponse<TEntity>> GetManyAsync(string collectionName, FilterDefinition<TEntity> filter, PaginationQueryParametersBO pagination, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get a single instance of an entity
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Instance of a entity matching <paramref name="filter"/></returns>
-    Task<TEntity?> GetAsync(string collectionName, FilterDefinition<TEntity> filter);
+    Task<TEntity?> GetAsync(string collectionName, FilterDefinition<TEntity> filter, CancellationToken cancellationToken);
 
     /// <summary>
     /// Insert a new document into the specified collection
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="document">Document to be created in the <paramref name="collectionName"/> collection</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Newly created document</returns>
-    Task<TEntity> CreateOneAsync(string collectionName, TEntity document);
+    Task<TEntity> CreateOneAsync(string collectionName, TEntity document, CancellationToken cancellationToken);
 
     /// <summary>
     /// Insert multiple new documents into the specified collection
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="documents">Documents to be created in the <paramref name="collectionName"/> collection</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Operation success result of true or false</returns>
-    Task<TransactionResult> CreateManyAsync(string collectionName, IEnumerable<TEntity> documents);
+    Task<TransactionResult> CreateManyAsync(string collectionName, IEnumerable<TEntity> documents, CancellationToken cancellationToken);
 
     /// <summary>
     /// Replaces a document with a later version using a filter to match the record
@@ -64,8 +70,9 @@ public interface IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="document">Document to be replaced in the <paramref name="collectionName"/> collection</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Replace operation</returns>
-    Task<TransactionResult> ReplaceOneAsync(string collectionName, FilterDefinition<TEntity> filter, TEntity document);
+    Task<TransactionResult> ReplaceOneAsync(string collectionName, FilterDefinition<TEntity> filter, TEntity document, CancellationToken cancellationToken);
 
     /// <summary>
     /// Updates a document
@@ -76,8 +83,9 @@ public interface IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="update">Update Definition</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Update operation</returns>
-    Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update);
+    Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, UpdateDefinition<TEntity> update, CancellationToken cancellationToken);
 
     /// <summary>
     /// Updates a document
@@ -88,16 +96,18 @@ public interface IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
     /// <param name="updates">Collection of Update Definitions for a model</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Update operation</returns>
-    Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, List<UpdateDefinition<TEntity>> updates);
+    Task<TransactionResult> UpdateOneAsync(string collectionName, FilterDefinition<TEntity> filter, List<UpdateDefinition<TEntity>> updates, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a document
     /// </summary>
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Delete operation</returns>
-    Task<TransactionResult> DeleteOneAsync(string collectionName, FilterDefinition<TEntity> filter);
+    Task<TransactionResult> DeleteOneAsync(string collectionName, FilterDefinition<TEntity> filter, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes many documents
@@ -105,6 +115,7 @@ public interface IMongoDbRepo<TEntity> where TEntity : class
     /// <param name="collectionName">Name of the Collection</param>
     /// <param name="expectedRecords">Expected Number of Records to remove</param>
     /// <param name="filter">Filter Definition query</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns><see cref="TransactionResult"/> results of the Delete operation</returns>
-    Task<TransactionResult> DeleteManyAsync(string collectionName, long expectedRecords, FilterDefinition<TEntity> filter);
+    Task<TransactionResult> DeleteManyAsync(string collectionName, long expectedRecords, FilterDefinition<TEntity> filter, CancellationToken cancellationToken);
 }

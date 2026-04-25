@@ -22,12 +22,13 @@ public class RestuarantController
     /// List restuarants
     /// </summary>
     /// <param name="queryParameters">Optional - Query parameters to filter restuarants</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Paginated list of restuarants matching <paramref name="queryParameters"/></returns>
     [HttpGet]
-    public async Task<IResult> ListRestuarants([FromQuery] FilterQueryParameters queryParameters)
+    public async Task<IResult> ListRestuarants([FromQuery] FilterQueryParameters queryParameters, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Find restuarants request received");
-        PaginationResponse<RestuarantBO> restuarants = await _orchestration.ListRestuarants(queryParameters.ToFilterQueryParametersBO());
+        PaginationResponse<RestuarantBO> restuarants = await _orchestration.ListRestuarants(queryParameters.ToFilterQueryParametersBO(), cancellationToken);
 
         return TypedResults.Ok(restuarants);
     }
@@ -36,12 +37,13 @@ public class RestuarantController
     /// Get a Restuarant using the provided id
     /// </summary>
     /// <param name="id">Unique Identifier for a restuarant</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
     [HttpGet("{id}")]
-    public async Task<IResult> Restuarant([FromRoute] string id)
+    public async Task<IResult> GetRestuarant([FromRoute] string id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Get restuarant request received");
-        RestuarantBO? restuarant = await _orchestration.GetRestuarant(id);
+        RestuarantBO? restuarant = await _orchestration.GetRestuarant(id, cancellationToken);
 
         if (restuarant is null || string.IsNullOrWhiteSpace(restuarant.Id))
         {
@@ -54,13 +56,14 @@ public class RestuarantController
     /// <summary>
     /// Creates a new restuarant
     /// </summary>
-    /// <param name="restuarant">Restuarant object to insert</param>
+    /// <param name="request">Restuarant object to insert</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant object updated with the new id</returns>
     [HttpPost]
-    public async Task<IResult> CreateRestuarant([FromBody] CreateRestuarantRequest request)
+    public async Task<IResult> CreateRestuarant([FromBody] CreateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Add restuarant request received");
-        RestuarantBO restuarant = await _orchestration.CreateRestuarant(request.ToCreateRestuarantRequestBO());
+        RestuarantBO restuarant = await _orchestration.CreateRestuarant(request.ToCreateRestuarantRequestBO(),cancellationToken);
 
         return TypedResults.Created(HttpContext.Request.Path.Value, restuarant);
     }
@@ -69,13 +72,14 @@ public class RestuarantController
     /// Creates many new restuarants
     /// </summary>
     /// <param name="requests">Collection of create restuarant requests</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Create results for the transaction</returns>
     [HttpPost("bulk")]
-    public async Task<IResult> CreateManyRestuarants([FromBody] CreateRestuarantRequest[] requests)
+    public async Task<IResult> CreateManyRestuarants([FromBody] CreateRestuarantRequest[] requests, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Add restuarant request received");
         CreateRestuarantRequestBO[] requestBOs = [.. requests.Select(_ => _.ToCreateRestuarantRequestBO())];
-        var results = await _orchestration.CreateManyRestuarants(requestBOs);
+        var results = await _orchestration.CreateManyRestuarants(requestBOs, cancellationToken);
 
         return TypedResults.Ok(results);
     }
@@ -84,13 +88,14 @@ public class RestuarantController
     /// Update an existing restuarant
     /// </summary>
     /// <param name="id">Id of the Restuarant to update</param>
-    /// <param name="restuarant">Restuarant object to update</param>
+    /// <param name="request">Restuarant object to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
     [HttpPatch("{id}")]
-    public async Task<IResult> UpdateRestuarant([FromRoute] string id, [FromBody] UpdateRestuarantRequest request)
+    public async Task<IResult> UpdateRestuarant([FromRoute] string id, [FromBody] UpdateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Update restuarant request received");
-        bool success = await _orchestration.UpdateRestuarant(id, request.ToUpdateRestuarantRequestBO());
+        bool success = await _orchestration.UpdateRestuarant(id, request.ToUpdateRestuarantRequestBO(), cancellationToken);
 
         return TypedResults.Ok(success);
     }
@@ -99,12 +104,13 @@ public class RestuarantController
     /// Remove a restuarant
     /// </summary>
     /// <param name="id">Id of the Restuarant to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
     [HttpDelete("{id}")]
-    public async Task<IResult> RemoveRestuarant([FromRoute] string id)
+    public async Task<IResult> RemoveRestuarant([FromRoute] string id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Remove restuarant request received");
-        bool success = await _orchestration.RemoveRestuarant(id);
+        bool success = await _orchestration.RemoveRestuarant(id, cancellationToken);
 
         return TypedResults.Ok(success);
     }

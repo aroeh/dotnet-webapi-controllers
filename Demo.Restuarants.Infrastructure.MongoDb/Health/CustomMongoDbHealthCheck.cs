@@ -27,7 +27,7 @@ public class CustomMongoDbHealthCheck(IOptions<MongoDbOptions> options) : IHealt
                 return HealthCheckResult.Healthy("Database Connection is Healthy", connectionCheckResults.ToDictionary());
             }
 
-            return HealthCheckResult.Unhealthy("Unable to connect to the database", null, connectionCheckResults.ToDictionary());
+            return HealthCheckResult.Unhealthy(connectionCheckResults.Message, null, connectionCheckResults.ToDictionary());
         }
         catch (Exception ex)
         {
@@ -43,6 +43,7 @@ public class CustomMongoDbHealthCheck(IOptions<MongoDbOptions> options) : IHealt
 
         try
         {
+            token.ThrowIfCancellationRequested();
             var dbNames = await client.ListDatabaseNamesAsync(token);
             connectionTestDuration = Stopwatch.GetElapsedTime(connectionTestStart);
 
@@ -50,6 +51,16 @@ public class CustomMongoDbHealthCheck(IOptions<MongoDbOptions> options) : IHealt
             {
                 ConnectionResult = dbNames is not null,
                 TestDuration = connectionTestDuration
+            };
+        }
+        catch (OperationCanceledException)
+        {
+            connectionTestDuration = Stopwatch.GetElapsedTime(connectionTestStart);
+            return new ConnectionResults()
+            {
+                ConnectionResult = false,
+                TestDuration = connectionTestDuration,
+                Message = "Health check operation was cancelled."
             };
         }
         catch (TimeoutException)

@@ -8,42 +8,48 @@ public interface IRestuarantOrchestration
     /// List restuarants
     /// </summary>
     /// <param name="queryParameters">Optional - Query parameters to filter restuarants</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Paginated list of restuarants matching <paramref name="queryParameters"/></returns>
-    Task<PaginationResponse<RestuarantBO>> ListRestuarants(FilterQueryParametersBO queryParameters);
+    Task<PaginationResponse<RestuarantBO>> ListRestuarants(FilterQueryParametersBO queryParameters, CancellationToken cancellationToken);
 
     /// <summary>
     /// Get restuarant by id
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
-    Task<RestuarantBO?> GetRestuarant(string id);
+    Task<RestuarantBO?> GetRestuarant(string id, CancellationToken cancellationToken);
 
     /// <summary>
     /// Creates a new Restuarant
     /// </summary>
     /// <param name="request">Restuarant properties and data</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant object updated with the new id</returns>
-    Task<RestuarantBO> CreateRestuarant(CreateRestuarantRequestBO request);
+    Task<RestuarantBO> CreateRestuarant(CreateRestuarantRequestBO request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Create many new Restuarants
     /// </summary>
     /// <param name="requests">Collection of create restuarant requests</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    Task<TransactionResult> CreateManyRestuarants(CreateRestuarantRequestBO[] requests);
+    Task<TransactionResult> CreateManyRestuarants(CreateRestuarantRequestBO[] requests, CancellationToken cancellationToken);
 
     /// <summary>
     /// Updates a Restuarant record
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
     /// <param name="request">Restuarant properties to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
-    Task<bool> UpdateRestuarant(string id, UpdateRestuarantRequestBO request);
+    Task<bool> UpdateRestuarant(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a Restuarant record
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
-    Task<bool> RemoveRestuarant(string id);
+    Task<bool> RemoveRestuarant(string id, CancellationToken cancellationToken);
 }

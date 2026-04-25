@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using System.Net;
 using System.Text.Json;
 
 namespace Demo.Restuarants.API.Middleware;
@@ -27,41 +28,52 @@ public class GlobalExceptionHandler : IExceptionHandler
     {
         logger.Error(httpContext.TraceIdentifier, exception.Message);
 
-        // default the status code value to 500 for unhandled exception errors
-        int statusCode = 500;
-        string title = "An unhandled error occurred";
+        ProblemDetails problemDetails = SetProblemDetails(httpContext, exception);
 
-        // uncomment to extend and use to handle other exception types as desired.
-        //switch (exception)
-        //{
-        //    case BadHttpRequestException:
-        //        statusCode = (int)HttpStatusCode.BadRequest;
-        //        title = exception.GetType().Name;
-        //        break;
-        //    default:
-        //        statusCode = (int)HttpStatusCode.InternalServerError;
-        //        title = "Internal Server Error";
-        //        break;
-        //}
+        httpContext.Response.StatusCode = problemDetails.Status is null ? 500 : problemDetails.Status.Value;
+        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
 
+        return true;
+    }
+
+    private ProblemDetails SetProblemDetails(HttpContext httpContext, Exception exception)
+    {
         ProblemDetails problemDetails = new()
         {
-            Status = statusCode,
-            Type = exception.GetType().Name,
-            Title = title
+            Type = exception.GetType().Name
         };
         problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
+
+        switch (exception)
+        {
+            case OperationCanceledException:
+                problemDetails.Status = 499; // No defined standard code exists for cancelled.  499 seems to be a nginx code which might fit.
+                problemDetails.Title = "Requested cancelled";
+                problemDetails.Detail = "Requested operation was cancelled by the user";
+                break;
+            case BadHttpRequestException: // this will not be triggered by model validation on the controller.  only explicitly throwing this type will reach here
+                problemDetails.Status = (int)HttpStatusCode.BadRequest;
+                problemDetails.Title = "Bad Request";
+                problemDetails.Detail = "";
+                break;
+            case TimeoutException:
+                problemDetails.Status = (int)HttpStatusCode.RequestTimeout;
+                problemDetails.Title = "Request Timeout";
+                problemDetails.Detail = "The request exceeded allowed time and could not be completed";
+                break;
+            default:
+                problemDetails.Status = (int)HttpStatusCode.InternalServerError;
+                problemDetails.Title = "Internal Server Error";
+                problemDetails.Detail = "There was an unhandled exception processing the request";
+                break;
+        }
 
         // we can customize by environment if needed for additional debugging
         if (isDevelopment)
         {
-            problemDetails.Detail = exception.Message;
-            //problemDetails.Extensions["data"] = exception.Data;
+            problemDetails.Extensions["data"] = exception.Data;
         }
 
-
-        await httpContext.Response.WriteAsJsonAsync(problemDetails, cancellationToken);
-
-        return true;
+        return problemDetails;
     }
 }

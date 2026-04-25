@@ -23,13 +23,14 @@ public class RestuarantRepo
     /// Query restuarants
     /// </summary>
     /// <param name="queryParameters">Optional - Query parameters to filter restuarants</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Paginated collection of restuarant records matching <paramref name="queryParameters"/></returns>
-    public async Task<PaginationResponse<RestuarantBO>> QueryRestuarants(FilterQueryParametersBO queryParameters)
+    public async Task<PaginationResponse<RestuarantBO>> QueryRestuarants(FilterQueryParametersBO queryParameters, CancellationToken cancellationToken)
     {
         FilterDefinition<RestuarantDocument> filter = ConfigureFilter(queryParameters);
 
         _logger.LogInformation("Querying restuarants");
-        var results = await _mongo.GetManyAsync(_collection, filter, queryParameters);
+        var results = await _mongo.GetManyAsync(_collection, filter, queryParameters, cancellationToken);
         return new PaginationResponse<RestuarantBO>([.. results.Data.Select(_ => _.ToRestuarant())], results.MetaData);
     }
 
@@ -66,14 +67,15 @@ public class RestuarantRepo
     /// Get restuarant by id
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
-    public async Task<RestuarantBO?> GetRestuarant(string id)
+    public async Task<RestuarantBO?> GetRestuarant(string id, CancellationToken cancellationToken)
     {
         FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
             .Eq(d => d.Id, id);
 
         _logger.LogInformation("Finding restuarant by id");
-        RestuarantDocument? restuarant = await _mongo.GetAsync(_collection, filter);
+        RestuarantDocument? restuarant = await _mongo.GetAsync(_collection, filter, cancellationToken);
         return restuarant?.ToRestuarant();
     }
 
@@ -81,12 +83,13 @@ public class RestuarantRepo
     /// Creates a new Restuarant
     /// </summary>
     /// <param name="restuarant">Restuarant properties and data</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant object updated with the new id</returns>
-    public async Task<RestuarantBO> CreateRestuarant(RestuarantBO restuarant)
+    public async Task<RestuarantBO> CreateRestuarant(RestuarantBO restuarant, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Adding new restuarant");
         RestuarantDocument document = restuarant.ToRestuarantDocument();
-        await _mongo.CreateOneAsync(_collection, document);
+        await _mongo.CreateOneAsync(_collection, document, cancellationToken);
 
         return document.ToRestuarant();
     }
@@ -95,12 +98,13 @@ public class RestuarantRepo
     /// Create many new Restuarants
     /// </summary>
     /// <param name="restuarants">Collection of new restuarants</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    public async Task<TransactionResult> CreateManyRestuarants(RestuarantBO[] restuarants)
+    public async Task<TransactionResult> CreateManyRestuarants(RestuarantBO[] restuarants, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Adding new restuarants");
         RestuarantDocument[] documents = [.. restuarants.Select(_ => _.ToRestuarantDocument())];
-        return await _mongo.CreateManyAsync(_collection, documents);
+        return await _mongo.CreateManyAsync(_collection, documents, cancellationToken);
     }
 
     /// <summary>
@@ -108,8 +112,9 @@ public class RestuarantRepo
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
     /// <param name="request">Restuarant properties to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    public async Task<TransactionResult> UpdateRestuarant(string id, UpdateRestuarantRequestBO request)
+    public async Task<TransactionResult> UpdateRestuarant(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Updating restuarant");
 
@@ -167,19 +172,20 @@ public class RestuarantRepo
             }
         }
 
-        return await _mongo.UpdateOneAsync(_collection, filter, updates);
+        return await _mongo.UpdateOneAsync(_collection, filter, updates, cancellationToken);
     }
 
     /// <summary>
     /// Removes a restuarant from the database
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>MongoDb results for the transaction</returns>
-    public async Task<TransactionResult> RemoveRestuarant(string id)
+    public async Task<TransactionResult> RemoveRestuarant(string id, CancellationToken cancellationToken)
     {
         FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
             .Eq(d => d.Id, id);
 
-        return await _mongo.DeleteOneAsync(_collection, filter);
+        return await _mongo.DeleteOneAsync(_collection, filter, cancellationToken);
     }
 }
