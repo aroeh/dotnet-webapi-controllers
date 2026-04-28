@@ -33,7 +33,7 @@ public interface IRestuarantRepo
     /// </summary>
     /// <param name="restuarants">Collection of new restuarants</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>MongoDb results for the transaction</returns>
+    /// <returns>Results for the transaction</returns>
     Task<TransactionResult> CreateManyRestuarantsAsync(RestuarantBO[] restuarants, CancellationToken cancellationToken);
 
     /// <summary>
@@ -42,7 +42,7 @@ public interface IRestuarantRepo
     /// <param name="id">Id of the restuarant</param>
     /// <param name="request">Restuarant properties to update</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>MongoDb results for the transaction</returns>
+    /// <returns>Results for the transaction</returns>
     Task<TransactionResult> UpdateRestuarantAsync(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken);
 
     /// <summary>
@@ -50,6 +50,6 @@ public interface IRestuarantRepo
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>MongoDb results for the transaction</returns>
+    /// <returns>Results for the transaction</returns>
     Task<TransactionResult> RemoveRestuarantAsync(string id, CancellationToken cancellationToken);
 }

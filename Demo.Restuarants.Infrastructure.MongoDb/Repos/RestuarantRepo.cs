@@ -99,7 +99,7 @@ public class RestuarantRepo
     /// </summary>
     /// <param name="restuarants">Collection of new restuarants</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>MongoDb results for the transaction</returns>
+    /// <returns>Results for the transaction</returns>
     public async Task<TransactionResult> CreateManyRestuarantsAsync(RestuarantBO[] restuarants, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Adding new restuarants");
@@ -113,7 +113,7 @@ public class RestuarantRepo
     /// <param name="id">Id of the restuarant</param>
     /// <param name="request">Restuarant properties to update</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>MongoDb results for the transaction</returns>
+    /// <returns>Results for the transaction</returns>
     public async Task<TransactionResult> UpdateRestuarantAsync(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken)
     {
         _logger.LogInformation("Updating restuarant");
@@ -180,7 +180,7 @@ public class RestuarantRepo
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>MongoDb results for the transaction</returns>
+    /// <returns>Results for the transaction</returns>
     public async Task<TransactionResult> RemoveRestuarantAsync(string id, CancellationToken cancellationToken)
     {
         FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter

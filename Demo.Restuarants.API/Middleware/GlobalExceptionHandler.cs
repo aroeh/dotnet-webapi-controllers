@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Diagnostics;
+﻿using Demo.Restuarants.Shared.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
 using System.Text.Json;
@@ -36,7 +37,7 @@ public class GlobalExceptionHandler : IExceptionHandler
         return true;
     }
 
-    private ProblemDetails SetProblemDetails(HttpContext httpContext, Exception exception)
+    private static ProblemDetails SetProblemDetails(HttpContext httpContext, Exception exception)
     {
         ProblemDetails problemDetails = new()
         {
@@ -44,6 +45,20 @@ public class GlobalExceptionHandler : IExceptionHandler
         };
         problemDetails.Extensions["traceId"] = httpContext.TraceIdentifier;
 
+        if (exception is ICustomException)
+        {
+            GetCustomExceptionInformation(problemDetails, exception);
+        }
+        else
+        {
+            GetExceptionInformation(problemDetails, exception);
+        }
+
+        return problemDetails;
+    }
+
+    private static void GetExceptionInformation(ProblemDetails problemDetails, Exception exception)
+    {
         switch (exception)
         {
             case OperationCanceledException:
@@ -67,13 +82,20 @@ public class GlobalExceptionHandler : IExceptionHandler
                 problemDetails.Detail = "There was an unhandled exception processing the request";
                 break;
         }
+    }
 
-        // we can customize by environment if needed for additional debugging
-        if (isDevelopment)
+    private static void GetCustomExceptionInformation(ProblemDetails problemDetails, Exception exception)
+    {
+        problemDetails.Detail = exception.Message;
+
+        // get the custom message details
+        var customException = (ICustomException)exception;
+        problemDetails.Status = customException.StatusCode;
+        problemDetails.Title = customException.Title;
+
+        if (exception.Data.Count > 0)
         {
             problemDetails.Extensions["data"] = exception.Data;
         }
-
-        return problemDetails;
     }
 }

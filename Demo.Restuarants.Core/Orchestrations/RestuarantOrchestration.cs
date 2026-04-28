@@ -1,6 +1,7 @@
 ﻿using Demo.Restuarants.Core.Extensions;
 using Demo.Restuarants.Core.Interfaces;
 using Demo.Restuarants.Infrastructure.MongoDb.Interfaces;
+using Demo.Restuarants.Shared.Exceptions;
 using Demo.Restuarants.Shared.Models;
 using Demo.Restuarants.Shared.Utils;
 using Microsoft.Extensions.Logging;
@@ -56,7 +57,7 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// </summary>
     /// <param name="requests">Collection of create restuarant requests</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>MongoDb results for the transaction</returns>
+    /// <returns>Create results for the transaction</returns>
     public async Task<TransactionResult> CreateManyRestuarantsAsync(CreateRestuarantRequestBO[] requests, CancellationToken cancellationToken)
     {
         RestuarantBO[] requestCollection = new RestuarantBO[requests.Length];
@@ -77,14 +78,13 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
     /// <param name="id">Id of the restuarant</param>
     /// <param name="request">Restuarant properties to update</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
-    /// <returns>Success result</returns>
-    public async Task<bool> UpdateRestuarantAsync(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken)
+    /// <returns>Results of the update transaction</returns>
+    public async Task<TransactionResult> UpdateRestuarantAsync(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken)
     {
-        _ = await GetRestuarantAsync(id, cancellationToken) ?? throw new Exception("Restuarant does not exist.  Unable to update.");
+        _ = await GetRestuarantAsync(id, cancellationToken) ?? throw new NotFoundException("Restuarant does not exist.  Unable to update.", id);
 
         _logger.LogInformation("Updating restuarant");
-        TransactionResult result = await _repo.UpdateRestuarantAsync(id, request, cancellationToken);
-        return result.Success;
+        return await _repo.UpdateRestuarantAsync(id, request, cancellationToken);
     }
 
     /// <summary>

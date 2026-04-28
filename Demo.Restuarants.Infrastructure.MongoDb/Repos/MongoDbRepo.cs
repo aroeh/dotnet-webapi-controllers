@@ -1,4 +1,5 @@
-﻿using Demo.Restuarants.Infrastructure.MongoDb.Extensions;
+﻿using Demo.Restuarants.Infrastructure.MongoDb.Constants;
+using Demo.Restuarants.Infrastructure.MongoDb.Extensions;
 using Demo.Restuarants.Infrastructure.MongoDb.Interfaces;
 using Demo.Restuarants.Infrastructure.MongoDb.Options;
 using Demo.Restuarants.Shared.Models;
@@ -131,12 +132,11 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
         _logger.LogInformation("inserting new documents");
         await collection.InsertManyAsync(documents, null, cancellationToken);
         return new TransactionResult
-        {
-            TransactionRun = true,
-            IsAcknowledged = true,
-            ExpectedRecordCount = documents.Count(),
-            ActualRecordCount = documents.Count()
-        };
+        (
+            documents.Count(),
+            documents.Count(),
+            DatabaseConstants.Created
+        );
     }
 
     /// <summary>
@@ -155,7 +155,7 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
         ReplaceOneResult result = await collection.ReplaceOneAsync(filter, document, (ReplaceOptions?)null, cancellationToken);
 
         _logger.LogInformation("operation completed...returning result");
-        return result.ToMongoTransactionResult();
+        return result.ToTransactionResult();
     }
 
     /// <summary>
@@ -174,7 +174,7 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         UpdateResult result = await collection.UpdateOneAsync(filter, update, null, cancellationToken);
-        return result.ToMongoTransactionResult();
+        return result.ToTransactionResult();
     }
 
     /// <summary>
@@ -193,10 +193,7 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
         if (updates.Count == 0)
         {
             _logger.LogInformation("There are no updates to perform...returning result");
-            return new TransactionResult
-            {
-                TransactionRun = false
-            };
+            return new TransactionResult(DatabaseConstants.Updated);
         }
 
         var update = Builders<TEntity>.Update;
@@ -215,7 +212,7 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         DeleteResult result = await collection.DeleteOneAsync(filter, cancellationToken);
-        return result.ToMongoTransactionResult(1);
+        return result.ToTransactionResult(1);
     }
 
     /// <summary>
@@ -231,6 +228,6 @@ public class MongoDbRepo<TEntity> : IMongoDbRepo<TEntity> where TEntity : class
         var collection = _database.GetCollection<TEntity>(collectionName);
 
         DeleteResult result = await collection.DeleteManyAsync(filter, cancellationToken);
-        return result.ToMongoTransactionResult(expectedRecords);
+        return result.ToTransactionResult(expectedRecords);
     }
 }

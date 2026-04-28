@@ -112,9 +112,9 @@ public class RestuarantController
     public async Task<IResult> UpdateRestuarantAsync([FromRoute] string id, [FromBody] UpdateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Update restuarant request received");
-        bool success = await _orchestration.UpdateRestuarantAsync(id, request.ToUpdateRestuarantRequestBO(), cancellationToken);
+        TransactionResult results = await _orchestration.UpdateRestuarantAsync(id, request.ToUpdateRestuarantRequestBO(), cancellationToken);
 
-        return TypedResults.Ok(success);
+        return TypedResults.Ok(results);
     }
 
     /// <summary>
