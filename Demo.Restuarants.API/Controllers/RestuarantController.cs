@@ -39,7 +39,7 @@ public class RestuarantController
     /// <param name="id">Unique Identifier for a restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
-    [HttpGet("{id}")]
+    [HttpGet("{id}", Name = "GetRestuarant")]
     [ActionName(nameof(GetRestuarantAsync))]
     public async Task<IResult> GetRestuarantAsync([FromRoute] string id, CancellationToken cancellationToken = default)
     {
@@ -67,8 +67,21 @@ public class RestuarantController
         RestuarantBO restuarant = await _orchestration.CreateRestuarantAsync(request.ToCreateRestuarantRequestBO(), cancellationToken);
 
         // Best practice to use the path and the id to return in the header and point to the resource
-        return TypedResults.Created($"{HttpContext.Request.Path.Value}/{restuarant.Id}", restuarant);
+        return TypedResults.CreatedAtRoute(restuarant, "GetRestuarant", new { id = restuarant.Id });
+
+        /*
+         * TypedResults offers 2 different methods to use for returning created data:  Created and CreatedAtRoute
+         * CreatedAtRoute can return the host name along with the route and parameters.  It uses a route name to generate the URI to return in the header.
+         * It does require the Get method to have the Name attribute.  See GetRestuarantAsync method for the exact implementation.  The route name needs to be set [HttpGet("{id}", Name = "GetRestuarant")]
+         * 
+         * Created expects a URI for the route to point back to the created resource.  This can include the full host name or just the relative location.
+         * ex: api/restuarant/<id> vs https://localhost/api/restuarant/<id>
+         * 
+         * implementation ex:
+         * return TypedResults.Created($"{HttpContext.Request.Path.Value}/{restuarant.Id}", restuarant);
+         */
     }
+
     /*
      * This method could be written using IActionResult and related method, in fact all methods in this controller could be written to use IAction Result.
      * The IResult matches the same return type as minimal apis and that's the only reason it was used here.  Both work great.

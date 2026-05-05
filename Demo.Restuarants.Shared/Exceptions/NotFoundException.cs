@@ -10,6 +10,7 @@ public class NotFoundException : Exception, ICustomException
 
     public string? Id { get; }
 
+
     public NotFoundException(string msg)
         : base(msg) { }
 
