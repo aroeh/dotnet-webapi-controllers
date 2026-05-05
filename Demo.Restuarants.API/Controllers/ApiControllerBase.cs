@@ -5,6 +5,7 @@ namespace Demo.Restuarants.API.Controllers;
 [ApiController]
 [Produces("application/json")]
 [Consumes("application/json")]
+[ProducesResponseType(StatusCodes.Status500InternalServerError)]
 public class ApiControllerBase<TDerived>
 (
     ILogger<TDerived> logger

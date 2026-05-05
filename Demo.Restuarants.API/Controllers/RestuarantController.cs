@@ -1,4 +1,5 @@
 ﻿using Asp.Versioning;
+using Demo.Restuarants.API.Constants;
 using Demo.Restuarants.API.Extensions;
 using Demo.Restuarants.API.Models;
 using Demo.Restuarants.Core.Interfaces;
@@ -25,6 +26,7 @@ public class RestuarantController
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Paginated list of restuarants matching <paramref name="queryParameters"/></returns>
     [HttpGet]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IResult> ListRestuarantsAsync([FromQuery] FilterQueryParameters queryParameters, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Find restuarants request received");
@@ -39,8 +41,10 @@ public class RestuarantController
     /// <param name="id">Unique Identifier for a restuarant</param>
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant if not <see langword="null"/></returns>
-    [HttpGet("{id}", Name = "GetRestuarant")]
-    [ActionName(nameof(GetRestuarantAsync))]
+    [HttpGet("{id}", Name = RouteConstants.GetRestuarant)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    //[ActionName(nameof(GetRestuarantAsync))] // If using IActionResult, uncomment this to set the action name for the Create method
     public async Task<IResult> GetRestuarantAsync([FromRoute] string id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Get restuarant request received");
@@ -61,13 +65,15 @@ public class RestuarantController
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Restuarant object updated with the new id</returns>
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> CreateRestuarantAsync([FromBody] CreateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Add restuarant request received");
         RestuarantBO restuarant = await _orchestration.CreateRestuarantAsync(request.ToCreateRestuarantRequestBO(), cancellationToken);
 
         // Best practice to use the path and the id to return in the header and point to the resource
-        return TypedResults.CreatedAtRoute(restuarant, "GetRestuarant", new { id = restuarant.Id });
+        return TypedResults.CreatedAtRoute(restuarant, RouteConstants.GetRestuarant, new { id = restuarant.Id });
 
         /*
          * TypedResults offers 2 different methods to use for returning created data:  Created and CreatedAtRoute
@@ -105,6 +111,8 @@ public class RestuarantController
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Create results for the transaction</returns>
     [HttpPost("bulk")]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> CreateManyRestuarantsAsync([FromBody] CreateRestuarantRequest[] requests, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Add restuarant request received");
@@ -122,6 +130,9 @@ public class RestuarantController
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
     [HttpPatch("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> UpdateRestuarantAsync([FromRoute] string id, [FromBody] UpdateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Update restuarant request received");
@@ -137,6 +148,7 @@ public class RestuarantController
     /// <param name="cancellationToken">Token for handling cancellation requests</param>
     /// <returns>Success result</returns>
     [HttpDelete("{id}")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IResult> RemoveRestuarantAsync([FromRoute] string id, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Remove restuarant request received");
