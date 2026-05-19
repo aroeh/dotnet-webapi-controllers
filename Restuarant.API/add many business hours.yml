@@ -1,0 +1,49 @@
+info:
+  name: add many business hours
+  type: http
+  seq: 14
+
+http:
+  method: POST
+  url: "{{host}}/api/restuarants/{restuarantId}/business-hours/bulk?api-version={{api-version}}"
+  params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
+  body:
+    type: json
+    data: |-
+      [
+        {
+          "dayOfWeek": "Monday",
+          "openTime": "08:00",
+          "closeTime": "12:00"
+        },
+        {
+          "dayOfWeek": "Tuesday",
+          "openTime": "08:00",
+          "closeTime": "12:00"
+        },
+        {
+          "dayOfWeek": "Wednesday",
+          "openTime": "08:00",
+          "closeTime": "12:00"
+        },
+        {
+          "dayOfWeek": "Thursday",
+          "openTime": "08:00",
+          "closeTime": "12:00"
+        },
+        {
+          "dayOfWeek": "Friday",
+          "openTime": "08:00",
+          "closeTime": "12:00"
+        }
+      ]
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

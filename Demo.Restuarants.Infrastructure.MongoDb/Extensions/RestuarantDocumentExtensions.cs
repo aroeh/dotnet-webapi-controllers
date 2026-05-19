@@ -13,7 +13,8 @@ internal static class RestuarantDocumentExtensions
             doc.CuisineType,
             doc.Website is null ? null : new Uri(doc.Website),
             doc.Phone,
-            doc.Address.ToLocation()
+            doc.Address.ToLocation(),
+            [.. doc.BusinessHours.Select(_ => _.ToRestuarantBusinessHourBO())]
         );
     }
 
@@ -28,6 +29,16 @@ internal static class RestuarantDocumentExtensions
         );
     }
 
+    internal static RestuarantBusinessHourBO ToRestuarantBusinessHourBO(this BusinessHourDocument doc)
+    {
+        return new RestuarantBusinessHourBO(
+            doc.Id,
+            Enum.Parse<DayOfWeek>(doc.DayOfWeek),
+            doc.OpenTime,
+            doc.CloseTime
+        );
+    }
+
     internal static RestuarantDocument ToRestuarantDocument(this RestuarantBO model)
     {
         return new RestuarantDocument()
@@ -38,6 +49,7 @@ internal static class RestuarantDocumentExtensions
             Website = model.Website?.ToString(),
             Phone = model.Phone,
             Address = model.Address.ToLocationDocument(),
+            BusinessHours = [.. model.BusinessHours.Select(_ => _.ToBusinessHourDocument())]
         };
     }
 
@@ -50,6 +62,17 @@ internal static class RestuarantDocumentExtensions
             State = model.State,
             Country = model.Country,
             ZipCode = model.ZipCode
+        };
+    }
+
+    internal static BusinessHourDocument ToBusinessHourDocument(this RestuarantBusinessHourBO model)
+    {
+        return new BusinessHourDocument()
+        {
+            Id = model.Id,
+            DayOfWeek = model.DayOfWeek.ToString(),
+            OpenTime = model.OpenTime,
+            CloseTime = model.CloseTime
         };
     }
 }

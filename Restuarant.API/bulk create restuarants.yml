@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/api/restuarant/bulk?api-version={{api-version}}"
+  url: "{{host}}/api/restuarants/bulk?api-version={{api-version}}"
   params:
     - name: api-version
       value: "{{api-version}}"

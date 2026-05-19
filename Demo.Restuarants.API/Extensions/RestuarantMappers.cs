@@ -24,7 +24,8 @@ internal static class RestuarantMappers
             request.CuisineType,
             request.Website,
             request.Phone,
-            request.Address.ToCreateLocationRequestBO()
+            request.Address.ToCreateLocationRequestBO(),
+            request.BusinessHours is null ? null : [.. request.BusinessHours.Select(_ => _.ToCreateBusinessHourRequestBO())]
         );
     }
 
@@ -36,6 +37,15 @@ internal static class RestuarantMappers
             request.State,
             request.Country,
             request.ZipCode
+        );
+    }
+
+    internal static CreateBusinessHourRequestBO ToCreateBusinessHourRequestBO(this CreateBusinessHourRequest request)
+    {
+        return new CreateBusinessHourRequestBO(
+            request.DayOfWeek,
+            request.OpenTime,
+            request.CloseTime
         );
     }
 
@@ -58,6 +68,15 @@ internal static class RestuarantMappers
             request.State,
             request.Country,
             request.ZipCode
+        );
+    }
+
+    internal static UpdateBusinessHourRequestBO ToUpdateBusinessHourRequestBO(this UpdateBusinessHourRequest request)
+    {
+        return new UpdateBusinessHourRequestBO(
+            request.DayOfWeek,
+            request.OpenTime,
+            request.CloseTime
         );
     }
 }

@@ -7,5 +7,6 @@ public record RestuarantBO
     string CuisineType,
     Uri? Website,
     string Phone,
-    LocationBO Address
+    LocationBO Address,
+    List<RestuarantBusinessHourBO> BusinessHours
 );

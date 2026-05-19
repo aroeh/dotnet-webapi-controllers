@@ -5,7 +5,7 @@ info:
 
 http:
   method: POST
-  url: "{{host}}/api/restuarant?api-version={{api-version}}"
+  url: "{{host}}/api/restuarants?api-version={{api-version}}"
   params:
     - name: api-version
       value: "{{api-version}}"
@@ -24,7 +24,19 @@ http:
               "state": "KY",
               "zipCode": "12345",
               "country": "United States"
+          },
+        "businessHours": [
+          {
+            "dayOfWeek": "Monday",
+            "openTime": "08:00",
+            "closeTime": "17:00"
+          },
+          {
+            "dayOfWeek": "Tuesday",
+            "openTime": "08:00",
+            "closeTime": "17:00"
           }
+        ]
       }
   auth: inherit
 

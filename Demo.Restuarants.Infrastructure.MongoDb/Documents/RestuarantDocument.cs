@@ -23,4 +23,7 @@ public record RestuarantDocument
 
     [BsonElement("address")]
     public LocationDocument Address { get; set; } = new();
+
+    [BsonElement("businessHours")]
+    public List<BusinessHourDocument> BusinessHours { get; set; } = [];
 }

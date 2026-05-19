@@ -12,7 +12,8 @@ internal static class RestuarantExtensions
             request.CuisineType,
             request.Website,
             request.Phone,
-            request.Address.MapToLocation()
+            request.Address.MapToLocation(),
+            []
         );
     }
 
@@ -24,6 +25,16 @@ internal static class RestuarantExtensions
             request.State,
             request.Country,
             request.ZipCode
+        );
+    }
+
+    internal static RestuarantBusinessHourBO MapToBusinessHours(this CreateBusinessHourRequestBO request, string id)
+    {
+        return new RestuarantBusinessHourBO(
+            id,
+            request.DayOfWeek,
+            request.OpenTime,
+            request.CloseTime
         );
     }
 }

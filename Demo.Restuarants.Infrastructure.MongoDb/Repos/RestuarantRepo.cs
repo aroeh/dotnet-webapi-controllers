@@ -5,6 +5,7 @@ using Demo.Restuarants.Shared.Models;
 using Microsoft.Extensions.Logging;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using MongoDB.Driver.Linq;
 
 namespace Demo.Restuarants.Infrastructure.MongoDb.Repos;
 
@@ -176,6 +177,51 @@ public class RestuarantRepo
     }
 
     /// <summary>
+    /// Update the location an existing restuarant
+    /// </summary>
+    /// <param name="id">Id of the restuarant</param>
+    /// <param name="request">Restuarant location properties to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Results for the transaction</returns>
+    public async Task<TransactionResult> UpdateRestuarantLocationAsync(string id, UpdateLocationRequestBO request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Updating restuarant location");
+
+        FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
+            .Eq(d => d.Id, id);
+
+        var update = Builders<RestuarantDocument>.Update;
+        List<UpdateDefinition<RestuarantDocument>> updates = [];
+
+        if (!string.IsNullOrWhiteSpace(request.Street))
+        {
+            updates.Add(update.Set(d => d.Address.Street, request.Street));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.City))
+        {
+            updates.Add(update.Set(d => d.Address.City, request.City));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.State))
+        {
+            updates.Add(update.Set(d => d.Address.State, request.State));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.Country))
+        {
+            updates.Add(update.Set(d => d.Address.Country, request.Country));
+        }
+
+        if (!string.IsNullOrWhiteSpace(request.ZipCode))
+        {
+            updates.Add(update.Set(d => d.Address.ZipCode, request.ZipCode));
+        }
+
+        return await _mongo.UpdateOneAsync(_collection, filter, updates, cancellationToken);
+    }
+
+    /// <summary>
     /// Removes a restuarant from the database
     /// </summary>
     /// <param name="id">Id of the restuarant</param>
@@ -187,5 +233,151 @@ public class RestuarantRepo
             .Eq(d => d.Id, id);
 
         return await _mongo.DeleteOneAsync(_collection, filter, cancellationToken);
+    }
+
+    /// <summary>
+    /// List business hours for a restuarant
+    /// </summary>
+    /// <param name="restuarantId">Unique Identifier for a restuarant</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Collection of business hours for the restuarant matching <paramref name="restuarantId"/></returns>
+    public async Task<List<RestuarantBusinessHourBO>> ListBusinessHoursAsync(string restuarantId, CancellationToken cancellationToken)
+    {
+        var restuarant = await GetRestuarantAsync(restuarantId, cancellationToken);
+
+        return restuarant is null
+            ? []
+            : restuarant.BusinessHours;
+    }
+
+    /// <summary>
+    /// Get business hour for a restuarant by id
+    /// </summary>
+    /// <param name="restuarantId">Unique Identifier for a restuarant</param>
+    /// <param name="businessHourId">Unique Identifier for a restuarant business hour record</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Business hour for the restuarant matching <paramref name="restuarantId"/> and <paramref name="businessHourId"/> if not <see langword="null"/></returns>
+    public async Task<RestuarantBusinessHourBO?> GetBusinessHourAsync(string restuarantId, string businessHourId, CancellationToken cancellationToken)
+    {
+        FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
+            .And(
+                Builders<RestuarantDocument>.Filter.Eq(d => d.Id, restuarantId),
+                Builders<RestuarantDocument>.Filter.ElemMatch(d => d.BusinessHours, hour => hour.Id == businessHourId)
+            );
+
+        _logger.LogInformation("Finding restuarant by id");
+        var restuarant = await _mongo.GetAsync(_collection, filter, cancellationToken);
+
+        if (restuarant is null || restuarant.BusinessHours.Count == 0)
+        {
+            return null;
+        }
+
+        return restuarant.ToRestuarant().BusinessHours.FirstOrDefault(_ => _.Id == businessHourId);
+    }
+
+    /// <summary>
+    /// Add a new business hour entry to a restuarant
+    /// </summary>
+    /// <param name="restuarantId">Id of the Restuarant to add the business hour record to.</param>
+    /// <param name="businessHour">Restuarant business hour properties and data</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Business hour object updated with the new id</returns>
+    public async Task<RestuarantBusinessHourBO> AddBusinessHourAsync(string restuarantId, RestuarantBusinessHourBO businessHour, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Adding new restuarant business hour");
+
+        BusinessHourDocument document = businessHour.ToBusinessHourDocument();
+
+        FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
+            .Eq(d => d.Id, restuarantId);
+
+        UpdateDefinition<RestuarantDocument> update = Builders<RestuarantDocument>.Update
+            .AddToSet(d => d.BusinessHours, document);
+
+        await _mongo.UpdateOneAsync(_collection, filter, update, cancellationToken);
+        return document.ToRestuarantBusinessHourBO();
+    }
+
+    /// <summary>
+    /// Add many new business hour entries to a restuarant
+    /// </summary>
+    /// <param name="restuarantId">Id of the Restuarant to add the business hour record to.</param>
+    /// <param name="businessHours">Collection of restuarant business hour requests</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Collection of business hours added to the restuarant</returns>
+    public async Task<List<RestuarantBusinessHourBO>> AddManyBusinessHoursAsync(string restuarantId, RestuarantBusinessHourBO[] businessHours, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("Adding new restuarant business hour");
+
+        BusinessHourDocument[] documents = [.. businessHours.Select(_ => _.ToBusinessHourDocument())];
+
+        FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
+            .Eq(d => d.Id, restuarantId);
+
+        UpdateDefinition<RestuarantDocument> update = Builders<RestuarantDocument>.Update
+            .AddToSetEach(d => d.BusinessHours, documents);
+
+        await _mongo.UpdateOneAsync(_collection, filter, update, cancellationToken);
+        return [.. documents.Select(_ => _.ToRestuarantBusinessHourBO())];
+    }
+
+    /// <summary>
+    /// Updates a business hour entry for a restuarant
+    /// </summary>
+    /// <param name="restuarantId">Id of the Restuarant to add the business hour record to.</param>
+    /// <param name="businessHourId">Unique Identifier for a restuarant business hour</param>
+    /// <param name="request">Restuarant business hour properties and data to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Results of the update transaction</returns>
+    public async Task<TransactionResult> UpdateBusinessHourAsync(string restuarantId, string businessHourId, UpdateBusinessHourRequestBO request, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("updating restuarant business hour document");
+
+        FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
+            .And(
+                Builders<RestuarantDocument>.Filter.Eq(d => d.Id, restuarantId),
+                Builders<RestuarantDocument>.Filter.ElemMatch(d => d.BusinessHours, hour => hour.Id == businessHourId)
+            );
+
+        var update = Builders<RestuarantDocument>.Update;
+        List<UpdateDefinition<RestuarantDocument>> updates = [];
+
+        if (request.DayOfWeek is not null)
+        {
+            updates.Add(update.Set(doc => doc.BusinessHours.FirstMatchingElement().DayOfWeek, request.DayOfWeek.Value.ToString()));
+        }
+
+        if (request.OpenTime is not null)
+        {
+            updates.Add(update.Set(doc => doc.BusinessHours.FirstMatchingElement().OpenTime, request.OpenTime.Value));
+        }
+
+        if (request.CloseTime is not null)
+        {
+            updates.Add(update.Set(doc => doc.BusinessHours.FirstMatchingElement().CloseTime, request.CloseTime.Value));
+        }
+
+        return await _mongo.UpdateOneAsync(_collection, filter, updates, cancellationToken);
+    }
+
+    /// <summary>
+    /// Removes a business hour entry from a restuarant
+    /// </summary>
+    /// <param name="restuarantId">Id of the Restuarant to add the business hour record to.</param>
+    /// <param name="businessHourId">Unique Identifier for a restuarant business hour</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Results of the update transaction</returns>
+    public async Task<TransactionResult> RemoveBusinessHourAsync(string restuarantId, string businessHourId, CancellationToken cancellationToken)
+    {
+        _logger.LogInformation("removing restuarant business hour document");
+
+        FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
+            .Eq(d => d.Id, restuarantId);
+
+        UpdateDefinition<RestuarantDocument> update = Builders<RestuarantDocument>.Update
+            .PullFilter(d => d.BusinessHours, hour => hour.Id == businessHourId);
+
+        return await _mongo.UpdateOneAsync(_collection, filter, update, cancellationToken);
     }
 }

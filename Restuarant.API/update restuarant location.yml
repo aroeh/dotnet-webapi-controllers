@@ -1,0 +1,29 @@
+info:
+  name: update restuarant location
+  type: http
+  seq: 8
+
+http:
+  method: PATCH
+  url: "{{host}}/api/restuarants/{restuarantId}/location?api-version={{api-version}}"
+  params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
+  body:
+    type: json
+    data: |-
+      {
+        "street": "123 Update Street",
+        "city": "Update",
+        "state": "KY",
+        "zipCode": "54321",
+        "country": "United States"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

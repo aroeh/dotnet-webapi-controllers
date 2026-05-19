@@ -6,5 +6,6 @@ public record CreateRestuarantRequestBO
     string CuisineType,
     Uri? Website,
     string Phone,
-    CreateLocationRequestBO Address
+    CreateLocationRequestBO Address,
+    List<CreateBusinessHourRequestBO>? BusinessHours
 );

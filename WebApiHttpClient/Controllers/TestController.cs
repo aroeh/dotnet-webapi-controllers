@@ -8,12 +8,12 @@ namespace WebApiHttpClient.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Produces("application/json")]
-public class TestController(ILogger<TestController> log, IRestuarantApi restuarantApi) : ControllerBase
+public class TestController(ILogger<TestController> log, IRestuarantsApi restuarantApi) : ControllerBase
 {
     private readonly ILogger<TestController> logger = log;
     //private readonly HttpFactoryHelper httpFactory = factory;
     //private readonly HttpClientHelper clientHelper = client;
-    private readonly IRestuarantApi _restuarantApi = restuarantApi;
+    private readonly IRestuarantsApi _restuarantApi = restuarantApi;
 
     /// <summary>
     /// Get All Restuarants
@@ -23,7 +23,7 @@ public class TestController(ILogger<TestController> log, IRestuarantApi restuara
     public async Task<IResult> GetRefitApi()
     {
         FilterQueryParameters queryParameters = new();
-        var restuarants = await _restuarantApi.QueryRestuarants(queryParameters);
+        var restuarants = await _restuarantApi.QueryRestuarantsAsync(queryParameters);
 
         return TypedResults.Ok(restuarants);
     }

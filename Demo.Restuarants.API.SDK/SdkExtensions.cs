@@ -21,7 +21,7 @@ public static class SdkExtensions
         };
 
         services
-            .AddRefitClient<IRestuarantApi>(refitSettings)
+            .AddRefitClient<IRestuarantsApi>(refitSettings)
             .ConfigureHttpClient(c => c.BaseAddress = new Uri(options.BaseUrl));
 
         return services;

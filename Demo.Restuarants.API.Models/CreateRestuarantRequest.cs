@@ -18,4 +18,6 @@ public record CreateRestuarantRequest
     public string Phone { get; set; } = string.Empty;
 
     public CreateLocationRequest Address { get; set; } = new();
+
+    public List<CreateBusinessHourRequest>? BusinessHours { get; set; }
 }

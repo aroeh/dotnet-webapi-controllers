@@ -8,9 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace Demo.Restuarants.Core.Orchestrations;
 
-public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRestuarantRepo repo) : IRestuarantOrchestration
+public class RestuarantOrchestration(ILogger<RestuarantOrchestration> logger, IRestuarantRepo repo) : IRestuarantOrchestration
 {
-    private readonly ILogger<RestuarantOrchestration> _logger = log;
+    private readonly ILogger<RestuarantOrchestration> _logger = logger;
     private readonly IRestuarantRepo _repo = repo;
 
     /// <summary>
@@ -49,6 +49,15 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
         string newId = IdGenerator.GenerateId();
         RestuarantBO restuarant = request.MapToRestuarant(newId);
 
+        if (request.BusinessHours?.Count > 0)
+        {
+            foreach (var item in request.BusinessHours)
+            {
+                string newHourId = IdGenerator.GenerateId();
+                restuarant.BusinessHours.Add(item.MapToBusinessHours(newHourId));
+            }
+        }
+
         return await _repo.CreateRestuarantAsync(restuarant, cancellationToken);
     }
 
@@ -85,6 +94,21 @@ public class RestuarantOrchestration(ILogger<RestuarantOrchestration> log, IRest
 
         _logger.LogInformation("Updating restuarant");
         return await _repo.UpdateRestuarantAsync(id, request, cancellationToken);
+    }
+
+    /// <summary>
+    /// Update the location an existing restuarant
+    /// </summary>
+    /// <param name="id">Id of the restuarant</param>
+    /// <param name="request">Restuarant location properties to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Results for the transaction</returns>
+    public async Task<TransactionResult> UpdateRestuarantLocationAsync(string id, UpdateLocationRequestBO request, CancellationToken cancellationToken)
+    {
+        _ = await GetRestuarantAsync(id, cancellationToken) ?? throw new NotFoundException("Restuarant does not exist.  Unable to update.", id);
+
+        _logger.LogInformation("Updating restuarant");
+        return await _repo.UpdateRestuarantLocationAsync(id, request, cancellationToken);
     }
 
     /// <summary>

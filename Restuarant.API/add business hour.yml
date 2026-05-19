@@ -1,0 +1,27 @@
+info:
+  name: add business hour
+  type: http
+  seq: 11
+
+http:
+  method: POST
+  url: "{{host}}/api/restuarants/{restuarantId}/business-hours?api-version={{api-version}}"
+  params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
+  body:
+    type: json
+    data: |-
+      {
+        "dayOfWeek": "Wednesday",
+        "openTime": "08:00",
+        "closeTime": "12:00"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

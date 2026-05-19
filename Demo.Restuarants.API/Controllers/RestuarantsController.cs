@@ -10,13 +10,13 @@ namespace Demo.Restuarants.API.Controllers;
 
 [ApiVersion(ApiVersions.Latest)]
 [Route("api/[controller]")]
-public class RestuarantController
+public class RestuarantsController
 (
-    ILogger<RestuarantController> log,
+    ILogger<RestuarantsController> logger,
     IRestuarantOrchestration orchestration
-) : ApiControllerBase<RestuarantController>(log)
+) : ApiControllerBase<RestuarantsController>(logger)
 {
-    private readonly ILogger<RestuarantController> _logger = log;
+    private readonly ILogger<RestuarantsController> _logger = logger;
     private readonly IRestuarantOrchestration _orchestration = orchestration;
 
     /// <summary>
@@ -137,6 +137,25 @@ public class RestuarantController
     {
         _logger.LogInformation("Update restuarant request received");
         TransactionResult results = await _orchestration.UpdateRestuarantAsync(id, request.ToUpdateRestuarantRequestBO(), cancellationToken);
+
+        return TypedResults.Ok(results);
+    }
+
+    /// <summary>
+    /// Update the location of an existing restuarant
+    /// </summary>
+    /// <param name="id">Id of the Restuarant to update</param>
+    /// <param name="request">Restuarant location object to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Success result</returns>
+    [HttpPatch("{id}/location")]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IResult> UpdateRestuarantLocationAsync([FromRoute] string id, [FromBody] UpdateLocationRequest request, CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Update restuarant location request received");
+        TransactionResult results = await _orchestration.UpdateRestuarantLocationAsync(id, request.ToUpdateLocationRequestBO(), cancellationToken);
 
         return TypedResults.Ok(results);
     }

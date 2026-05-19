@@ -46,6 +46,15 @@ public interface IRestuarantOrchestration
     Task<TransactionResult> UpdateRestuarantAsync(string id, UpdateRestuarantRequestBO request, CancellationToken cancellationToken);
 
     /// <summary>
+    /// Update the location an existing restuarant
+    /// </summary>
+    /// <param name="id">Id of the restuarant</param>
+    /// <param name="request">Restuarant location properties to update</param>
+    /// <param name="cancellationToken">Token for handling cancellation requests</param>
+    /// <returns>Results for the transaction</returns>
+    Task<TransactionResult> UpdateRestuarantLocationAsync(string id, UpdateLocationRequestBO request, CancellationToken cancellationToken);
+
+    /// <summary>
     /// Removes a Restuarant record
     /// </summary>
     /// <param name="id">Id of the restuarant</param>

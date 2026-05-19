@@ -8,7 +8,8 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddCoreOrchestrations(this IServiceCollection services)
     {
-        services.AddTransient<IRestuarantOrchestration, RestuarantOrchestration>();
+        services.AddScoped<IRestuarantOrchestration, RestuarantOrchestration>();
+        services.AddScoped<IBusinessHoursOrchestration, BusinessHoursOrchestration>();
 
         return services;
     }

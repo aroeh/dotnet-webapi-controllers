@@ -1,0 +1,27 @@
+info:
+  name: update business hour
+  type: http
+  seq: 13
+
+http:
+  method: PATCH
+  url: "{{host}}/api/restuarants/{restuarantId}/business-hours/{businessHourId}?api-version={{api-version}}"
+  params:
+    - name: api-version
+      value: "{{api-version}}"
+      type: query
+  body:
+    type: json
+    data: |-
+      {
+        "dayOfWeek": "Wednesday",
+        "openTime": "08:00",
+        "closeTime": "17:00"
+      }
+  auth: inherit
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

@@ -5,7 +5,7 @@ info:
 
 http:
   method: DELETE
-  url: "{{host}}/api/restuarant/{restuarantId}?api-version={{api-version}}"
+  url: "{{host}}/api/restuarants/{restuarantId}?api-version={{api-version}}"
   params:
     - name: api-version
       value: "{{api-version}}"
