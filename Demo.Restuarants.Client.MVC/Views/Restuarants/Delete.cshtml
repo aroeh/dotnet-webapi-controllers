@@ -1,0 +1,24 @@
+@model Demo.Restuarants.Shared.Models.RestuarantBO
+@{
+    ViewData["Title"] = "Delete Restaurant";
+}
+
+<h1>Delete Restaurant</h1>
+<partial name="_Alerts" />
+
+<div class="alert alert-warning">
+    Are you sure you want to delete <strong>@Model.Name</strong>?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Cuisine</dt>
+    <dd class="col-sm-9">@Model.CuisineType</dd>
+    <dt class="col-sm-3">Phone</dt>
+    <dd class="col-sm-9">@Model.Phone</dd>
+</dl>
+
+<form asp-action="Delete" asp-route-id="@Model.Id" method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Details" asp-route-id="@Model.Id" class="btn btn-link">Cancel</a>
+</form>

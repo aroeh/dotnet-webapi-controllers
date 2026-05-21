@@ -1,0 +1,21 @@
+@model Demo.Restuarants.Shared.Models.RestuarantBusinessHourBO
+@{
+    ViewData["Title"] = "Delete Business Hours";
+    var restuarantId = (string)ViewBag.RestuarantId;
+}
+
+<h1>Delete Business Hours</h1>
+<partial name="_Alerts" />
+
+<div class="alert alert-warning">
+    Remove <strong>@Model.DayOfWeek</strong> (@Model.OpenTime.ToString("t") – @Model.CloseTime.ToString("t"))?
+</div>
+
+<form asp-action="Delete"
+      asp-route-restuarantId="@restuarantId"
+      asp-route-businessHourId="@Model.Id"
+      method="post">
+    @Html.AntiForgeryToken()
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-action="Index" asp-route-restuarantId="@restuarantId" class="btn btn-link">Cancel</a>
+</form>

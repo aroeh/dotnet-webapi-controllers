@@ -7,4 +7,5 @@
   <Project Path="Demo.Restuarants.Infrastructure.MongoDb/Demo.Restuarants.Infrastructure.MongoDb.csproj" />
   <Project Path="Demo.Restuarants.Shared/Demo.Restuarants.Shared.csproj" />
   <Project Path="WebApiHttpClient/WebApiHttpClient.csproj" />
+  <Project Path="Demo.Restuarants.Client.MVC/Demo.Restuarants.Client.MVC.csproj" />
 </Solution>

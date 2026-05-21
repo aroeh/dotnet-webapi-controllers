@@ -1,0 +1,21 @@
+@model Demo.Restuarants.Client.MVC.Models.RestuarantFormViewModel
+@{
+    ViewData["Title"] = "Add Restaurant";
+}
+
+<h1>Add Restaurant</h1>
+<partial name="_Alerts" />
+
+<form asp-action="Create" method="post" class="card">
+    <div class="card-body">
+        <partial name="_RestuarantForm" model="Model" />
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-action="Index" class="btn btn-link">Cancel</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

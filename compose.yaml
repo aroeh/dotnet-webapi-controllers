@@ -1,6 +1,7 @@
 # Podman compose file - same as docker-compose
 networks:
   backend:
+  frontend:
 
 services:
   cache:
@@ -24,11 +25,23 @@ services:
     container_name: restuarant-api
     networks:
       - backend
+      - frontend
     build:
       context: . # context at the root is the path containing the compose file
       dockerfile: Demo.Restuarants.API/Dockerfile
     depends_on:
       - mongo
+  
+  restuarantclient:
+    image: ${DOCKER_REGISTRY-}restuarantmvcclient
+    container_name: restuarant-client-mvc
+    networks:
+      - frontend
+    build:
+      context: . # context at the root is the path containing the compose file
+      dockerfile: Demo.Restuarants.Client.MVC/Dockerfile
+    depends_on:
+      - restuarantapi
   
   # httpapi:
   #   image: ${DOCKER_REGISTRY-}httpclientapi

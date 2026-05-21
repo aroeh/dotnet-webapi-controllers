@@ -1,0 +1,24 @@
+@model Demo.Restuarants.Client.MVC.Models.BusinessHourFormViewModel
+
+<input type="hidden" asp-for="RestuarantId" />
+<input type="hidden" asp-for="BusinessHourId" />
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <label asp-for="DayOfWeek" class="form-label"></label>
+        <select asp-for="DayOfWeek" asp-items="Html.GetEnumSelectList<DayOfWeek>()" class="form-select"></select>
+        <span asp-validation-for="DayOfWeek" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="OpenTime" class="form-label"></label>
+        <input asp-for="OpenTime" class="form-control" type="time" />
+        <span asp-validation-for="OpenTime" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="CloseTime" class="form-label"></label>
+        <input asp-for="CloseTime" class="form-control" type="time" />
+        <span asp-validation-for="CloseTime" class="text-danger"></span>
+    </div>
+</div>

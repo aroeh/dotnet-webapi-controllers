@@ -1,0 +1,21 @@
+@model Demo.Restuarants.Client.MVC.Models.BusinessHourFormViewModel
+@{
+    ViewData["Title"] = "Add Business Hours";
+}
+
+<h1>Add Business Hours</h1>
+<partial name="_Alerts" />
+
+<form asp-action="Create" asp-route-restuarantId="@Model.RestuarantId" method="post" class="card">
+    <div class="card-body">
+        <partial name="_BusinessHourForm" model="Model" />
+        <div class="mt-4">
+            <button type="submit" class="btn btn-primary">Create</button>
+            <a asp-action="Index" asp-route-restuarantId="@Model.RestuarantId" class="btn btn-link">Cancel</a>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

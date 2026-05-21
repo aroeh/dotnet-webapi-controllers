@@ -1,0 +1,54 @@
+@model Demo.Restuarants.Client.MVC.Models.RestuarantFormViewModel
+
+<input type="hidden" asp-for="Id" />
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<div class="row g-3">
+    <div class="col-md-6">
+        <label asp-for="Name" class="form-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="CuisineType" class="form-label"></label>
+        <input asp-for="CuisineType" class="form-control" />
+        <span asp-validation-for="CuisineType" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Website" class="form-label"></label>
+        <input asp-for="Website" class="form-control" />
+        <span asp-validation-for="Website" class="text-danger"></span>
+    </div>
+    <div class="col-md-6">
+        <label asp-for="Phone" class="form-label"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+    <div class="col-12"><hr /><h5>Address</h5></div>
+    <div class="col-md-8">
+        <label asp-for="Street" class="form-label"></label>
+        <input asp-for="Street" class="form-control" />
+        <span asp-validation-for="Street" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="ZipCode" class="form-label"></label>
+        <input asp-for="ZipCode" class="form-control" />
+        <span asp-validation-for="ZipCode" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="City" class="form-label"></label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="State" class="form-label"></label>
+        <input asp-for="State" class="form-control" />
+        <span asp-validation-for="State" class="text-danger"></span>
+    </div>
+    <div class="col-md-4">
+        <label asp-for="Country" class="form-label"></label>
+        <input asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+</div>

@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Demo.Restuarants.API.Models\Demo.Restuarants.API.Models.csproj" />
-    <ProjectReference Include="..\Demo.Restuarants.API\Demo.Restuarants.API.csproj" />
     <ProjectReference Include="..\Demo.Restuarants.Shared\Demo.Restuarants.Shared.csproj" />
   </ItemGroup>
 

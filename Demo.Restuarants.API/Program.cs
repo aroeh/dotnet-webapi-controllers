@@ -59,6 +59,7 @@ builder.Services.AddApiVersioning(options =>
 });
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+// view the json at http://localhost:5017/openapi/v1.json
 builder.Services.AddOpenApi();
 
 builder.Services.AddCoreOrchestrations();
@@ -75,7 +76,7 @@ builder.Services.AddHsts(options =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+if (!app.Environment.IsProduction())
 {
     app.MapOpenApi();
 }

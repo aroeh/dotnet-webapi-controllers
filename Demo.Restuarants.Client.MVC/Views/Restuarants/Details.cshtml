@@ -1,0 +1,90 @@
+@model Demo.Restuarants.Shared.Models.RestuarantBO
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1 class="mb-0">@Model.Name</h1>
+    <div>
+        <a class="btn btn-outline-primary" asp-action="Edit" asp-route-id="@Model.Id">Edit</a>
+        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@Model.Id">Delete</a>
+    </div>
+</div>
+
+<partial name="_Alerts" />
+
+<div class="row g-4">
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header">Details</div>
+            <div class="card-body">
+                <dl class="row mb-0">
+                    <dt class="col-sm-4">Cuisine</dt>
+                    <dd class="col-sm-8">@Model.CuisineType</dd>
+                    <dt class="col-sm-4">Phone</dt>
+                    <dd class="col-sm-8">@Model.Phone</dd>
+                    <dt class="col-sm-4">Website</dt>
+                    <dd class="col-sm-8">
+                        @if (Model.Website is not null)
+                        {
+                            <a href="@Model.Website" target="_blank" rel="noopener">@Model.Website</a>
+                        }
+                    </dd>
+                    <dt class="col-sm-4">Address</dt>
+                    <dd class="col-sm-8">
+                        @Model.Address.Street<br />
+                        @Model.Address.City, @Model.Address.State @Model.Address.ZipCode<br />
+                        @Model.Address.Country
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <span>Business Hours</span>
+                <a class="btn btn-sm btn-primary"
+                   asp-controller="BusinessHours"
+                   asp-action="Create"
+                   asp-route-restuarantId="@Model.Id">Add Hours</a>
+            </div>
+            <div class="card-body">
+                @if (Model.BusinessHours.Count > 0)
+                {
+                    <table class="table table-sm mb-0">
+                        <thead>
+                            <tr>
+                                <th>Day</th>
+                                <th>Open</th>
+                                <th>Close</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var hour in Model.BusinessHours.OrderBy(h => h.DayOfWeek))
+                            {
+                                <tr>
+                                    <td>@hour.DayOfWeek</td>
+                                    <td>@hour.OpenTime.ToString("t")</td>
+                                    <td>@hour.CloseTime.ToString("t")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <a class="btn btn-link px-0 mt-2"
+                       asp-controller="BusinessHours"
+                       asp-action="Index"
+                       asp-route-restuarantId="@Model.Id">Manage business hours</a>
+                }
+                else
+                {
+                    <p class="text-muted mb-0">No business hours recorded.</p>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<p class="mt-4">
+    <a asp-action="Index">&larr; Back to list</a>
+</p>
