@@ -1,8 +1,11 @@
 # Overview
-This project is intended to be used for educational and reference purposes and will be updated (as time allows) as new technologies and libraries are released.  This is a .Net Web API using Controllers demonstrating several concepts for useful and more common features and attributes of APIs.
+This project is intended to be used for educational and reference purposes and will be updated (as time allows) as new technologies and libraries are released.  
+This is a .Net Web API using Controllers demonstrating several concepts for useful and more common features and attributes of APIs.
+
 
 ## Demonstrated Features
 - Clean Architecture concept
+- Options pattern
 - Global Exception Handling
 - Health Checks on dependent services
 - API Versioning by Query String
@@ -11,14 +14,17 @@ This project is intended to be used for educational and reference purposes and w
 - Docker container and Docker Compose
 - TODO: Open API Documentation on endpoints
 
+
 # Dependencies
 - Azure
 - MongoDB
 - Docker
 - Docker Compose V2
 
+
 # Getting Started
 This project has a dependency on MongoDB via a containerized instance of MongoDB.  The MongoDb project uses the options pattern to read values from app configuration and make them available for dependency injection.  This enables us to keep the setup within the Infrastructure project and easily find references to the options type to find where it is used.  See the following sections to setup the local credentials for the MongoDB container and Azure App Configuration.
+
 
 ## Docker Environment File
 Currently volume binding to read user secrets for the .Net app is not working.  This is a workaround solution until I get that or something better working for reading secrets in the docker container.  Currently the only secret needed will be the Azure App Configuration Connection String.
@@ -97,7 +103,7 @@ The easiest way to run this solution is to use docker compose as that will build
 
 
 ## API Dockerfiles
-There are 2 Dockerfiles present in the WebApiControllers project:
+There are 2 Dockerfiles present in the Demo.Restuarants.API project:
 - Dockerfile
 - Dockerfile_NoBuild
 
@@ -111,15 +117,15 @@ This example handles building the solution in a base image and then publishing t
 This could be useful when wanting to debug and letting the docker runtime handle all of the work, or if you don't want to manually build and publish code before spinning up a new image and container.
 
 ### Dockerfile_NoBuild
-This is a much smaller and much more simple docker file.  It requires published code to have already been produced to copy into the runtime image.
+This is a much smaller and much more simple docker file.  It requires code to have already been published to copy into the runtime image.
 The Docker build and container spin up is much faster since it doesn't have to build the solution in the image itself.  
 This scenario is useful in pipeline scenarios where the code may have already been built and published by prior tasks in a job.
 
 To use this docker file in the solution, do the following:
 
-1. In a command line, navigate to the directory containing the WebApiControllers.csproj
+1. In a command line, navigate to the directory containing the Demo.Restuarants.API.csproj
 ```
-cd <path>\WebApiControllers
+cd <path>\Demo.Restuarants.API
 ```
 
 > Alter the path variable to match your local environment
@@ -131,13 +137,13 @@ dotnet build
 
 3. Publish the code into a directory using the Release configuration
 ```
-dotnet publish WebApiControllers.csproj -c Release -o publish /p:UseAppHost=false
+dotnet publish Demo.Restuarants.API.csproj -c Release -o publish /p:UseAppHost=false
 ```
 
-> This creates a new directory at `<path>\WebApiControllers\publish`
+> This creates a new directory at `<path>\Demo.Restuarants.API\publish`
 
 4. Update the docker-compose.yaml section for webapi.
-    - Change the value of build.docker from WebApiControllers/Dockerfile to `WebApiControllers/Dockerfile_NoBuild`
+    - Change the value of build.docker from Demo.Restuarants.API/Dockerfile to `Demo.Restuarants.API/Dockerfile_NoBuild`
 
 
 ## Docker Compose
@@ -198,21 +204,32 @@ docker run -d -p 27017:27017 -e "MONGO_INITDB_ROOT_USERNAME=mongoUser" -e "MONGO
 ```
 docker build -t my_api_image -f Dockerfile .
 ```
-> Docker Context will vary depending on where you run the command.  This command assumes that it is being run from the same path containing the Dockerfile.  ie: "<PATH>\WebApiControllers\"
+> Docker Context will vary depending on where you run the command.  This command assumes that it is being run from the same path containing the Dockerfile.  ie: "<PATH>\Demo.Restuarants.API\"
 
 4. Run the Api image and container
 ```
-docker run -d -p 5112:80 -e "ASPNETCORE_ENVIRONMENT=Development" -e "MONGODB_CONN=mongodb://mongoUser:mongoPassword@mongoLocal:27017" -e "ASPNETCORE_URLS=http://+:80" --name my_api_container my_api_image
+docker run -d -p 5017:80 -e "ASPNETCORE_ENVIRONMENT=Development" -e "MONGODB_CONN=mongodb://mongoUser:mongoPassword@mongoLocal:27017" -e "ASPNETCORE_URLS=http://+:80" --name my_api_container my_api_image
+```
+
+5. Build the MVC Project Image
+```
+docker build -t my_client_image -f Dockerfile .
+```
+> Docker Context will vary depending on where you run the command.  This command assumes that it is being run from the same path containing the Dockerfile.  ie: "<PATH>\Demo.Restuarants.API\"
+
+6. Run the Api image and container
+```
+docker run -d -p 5120:80 -e "ASPNETCORE_ENVIRONMENT=Development" -e "ASPNETCORE_URLS=http://+:80" --name my_client_container my_client_image
 ```
 
 > This repo is not demonstrating security for the mongo db admin user or connection strings.  The best practice would be to store the credentials in a secure vault and retrieve them from the vault.
 
-5. Create a docker network
+7. Create a docker network
 ```
 docker network create my_network
 ```
 
-6. Add the mongo db and api containers to the network
+8. Add the mongo db and api containers to the network
 ```
 docker network connect mongoLocal
 ```
@@ -221,7 +238,11 @@ docker network connect mongoLocal
 docker network connect my_api_container
 ```
 
-6. Test the api using an http client like Postman or Visual Studio and .http files
+```
+docker network connect my_client_container
+```
+
+9. Test the api using an http client like Postman or Visual Studio and .http files
 
 
 ## Containers and IDE
