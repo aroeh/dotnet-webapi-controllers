@@ -18,8 +18,6 @@ public class RestuarantRepo
     private readonly ILogger<RestuarantRepo> _logger = log;
     private readonly IMongoDbRepo<RestuarantDocument> _mongo = mongo;
 
-    private const string _collection = "restuarants";
-
     /// <summary>
     /// Query restuarants
     /// </summary>
@@ -31,7 +29,7 @@ public class RestuarantRepo
         FilterDefinition<RestuarantDocument> filter = ConfigureFilter(queryParameters);
 
         _logger.LogInformation("Querying restuarants");
-        var results = await _mongo.GetManyAsync(_collection, filter, queryParameters, cancellationToken);
+        var results = await _mongo.GetManyAsync(filter, queryParameters, cancellationToken);
         return new PaginationResponse<RestuarantBO>([.. results.Data.Select(_ => _.ToRestuarant())], results.MetaData);
     }
 
@@ -76,7 +74,7 @@ public class RestuarantRepo
             .Eq(d => d.Id, id);
 
         _logger.LogInformation("Finding restuarant by id");
-        RestuarantDocument? restuarant = await _mongo.GetAsync(_collection, filter, cancellationToken);
+        RestuarantDocument? restuarant = await _mongo.GetAsync(filter, cancellationToken);
         return restuarant?.ToRestuarant();
     }
 
@@ -90,7 +88,7 @@ public class RestuarantRepo
     {
         _logger.LogInformation("Adding new restuarant");
         RestuarantDocument document = restuarant.ToRestuarantDocument();
-        await _mongo.CreateOneAsync(_collection, document, cancellationToken);
+        await _mongo.CreateOneAsync(document, cancellationToken);
 
         return document.ToRestuarant();
     }
@@ -105,7 +103,7 @@ public class RestuarantRepo
     {
         _logger.LogInformation("Adding new restuarants");
         RestuarantDocument[] documents = [.. restuarants.Select(_ => _.ToRestuarantDocument())];
-        return await _mongo.CreateManyAsync(_collection, documents, cancellationToken);
+        return await _mongo.CreateManyAsync(documents, cancellationToken);
     }
 
     /// <summary>
@@ -173,7 +171,7 @@ public class RestuarantRepo
             }
         }
 
-        return await _mongo.UpdateOneAsync(_collection, filter, updates, cancellationToken);
+        return await _mongo.UpdateOneAsync(filter, updates, cancellationToken);
     }
 
     /// <summary>
@@ -218,7 +216,7 @@ public class RestuarantRepo
             updates.Add(update.Set(d => d.Address.ZipCode, request.ZipCode));
         }
 
-        return await _mongo.UpdateOneAsync(_collection, filter, updates, cancellationToken);
+        return await _mongo.UpdateOneAsync(filter, updates, cancellationToken);
     }
 
     /// <summary>
@@ -232,7 +230,7 @@ public class RestuarantRepo
         FilterDefinition<RestuarantDocument> filter = Builders<RestuarantDocument>.Filter
             .Eq(d => d.Id, id);
 
-        return await _mongo.DeleteOneAsync(_collection, filter, cancellationToken);
+        return await _mongo.DeleteOneAsync(filter, cancellationToken);
     }
 
     /// <summary>
@@ -266,7 +264,7 @@ public class RestuarantRepo
             );
 
         _logger.LogInformation("Finding restuarant by id");
-        var restuarant = await _mongo.GetAsync(_collection, filter, cancellationToken);
+        var restuarant = await _mongo.GetAsync(filter, cancellationToken);
 
         if (restuarant is null || restuarant.BusinessHours.Count == 0)
         {
@@ -295,7 +293,7 @@ public class RestuarantRepo
         UpdateDefinition<RestuarantDocument> update = Builders<RestuarantDocument>.Update
             .AddToSet(d => d.BusinessHours, document);
 
-        await _mongo.UpdateOneAsync(_collection, filter, update, cancellationToken);
+        await _mongo.UpdateOneAsync(filter, update, cancellationToken);
         return document.ToRestuarantBusinessHourBO();
     }
 
@@ -318,7 +316,7 @@ public class RestuarantRepo
         UpdateDefinition<RestuarantDocument> update = Builders<RestuarantDocument>.Update
             .AddToSetEach(d => d.BusinessHours, documents);
 
-        await _mongo.UpdateOneAsync(_collection, filter, update, cancellationToken);
+        await _mongo.UpdateOneAsync(filter, update, cancellationToken);
         return [.. documents.Select(_ => _.ToRestuarantBusinessHourBO())];
     }
 
@@ -358,7 +356,7 @@ public class RestuarantRepo
             updates.Add(update.Set(doc => doc.BusinessHours.FirstMatchingElement().CloseTime, request.CloseTime.Value));
         }
 
-        return await _mongo.UpdateOneAsync(_collection, filter, updates, cancellationToken);
+        return await _mongo.UpdateOneAsync(filter, updates, cancellationToken);
     }
 
     /// <summary>
@@ -378,6 +376,6 @@ public class RestuarantRepo
         UpdateDefinition<RestuarantDocument> update = Builders<RestuarantDocument>.Update
             .PullFilter(d => d.BusinessHours, hour => hour.Id == businessHourId);
 
-        return await _mongo.UpdateOneAsync(_collection, filter, update, cancellationToken);
+        return await _mongo.UpdateOneAsync(filter, update, cancellationToken);
     }
 }

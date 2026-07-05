@@ -16,7 +16,6 @@ public class RestuarantsController
     IRestuarantOrchestration orchestration
 ) : ApiControllerBase<RestuarantsController>(logger)
 {
-    private readonly ILogger<RestuarantsController> _logger = logger;
     private readonly IRestuarantOrchestration _orchestration = orchestration;
 
     /// <summary>
@@ -29,7 +28,7 @@ public class RestuarantsController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IResult> ListRestuarantsAsync([FromQuery] FilterQueryParameters queryParameters, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Find restuarants request received");
+        Logger.LogInformation("Find restuarants request received");
         PaginationResponse<RestuarantBO> restuarants = await _orchestration.ListRestuarantsAsync(queryParameters.ToFilterQueryParametersBO(), cancellationToken);
 
         return TypedResults.Ok(restuarants);
@@ -47,7 +46,7 @@ public class RestuarantsController
     //[ActionName(nameof(GetRestuarantAsync))] // If using IActionResult, uncomment this to set the action name for the Create method
     public async Task<IResult> GetRestuarantAsync([FromRoute] string id, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Get restuarant request received");
+        Logger.LogInformation("Get restuarant request received");
         RestuarantBO? restuarant = await _orchestration.GetRestuarantAsync(id, cancellationToken);
 
         if (restuarant is null || string.IsNullOrWhiteSpace(restuarant.Id))
@@ -69,7 +68,7 @@ public class RestuarantsController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> CreateRestuarantAsync([FromBody] CreateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Add restuarant request received");
+        Logger.LogInformation("Add restuarant request received");
         RestuarantBO restuarant = await _orchestration.CreateRestuarantAsync(request.ToCreateRestuarantRequestBO(), cancellationToken);
 
         // Best practice to use the path and the id to return in the header and point to the resource
@@ -97,7 +96,7 @@ public class RestuarantsController
      * see the GetRestuarantAsync for the implementation
         public async Task<IActionResult> CreateRestuarantAsync([FromBody] CreateRestuarantRequest request, CancellationToken cancellationToken = default)
         {
-            _logger.LogInformation("Add restuarant request received");
+            Logger.LogInformation("Add restuarant request received");
             RestuarantBO restuarant = await _orchestration.CreateRestuarantAsync(request.ToCreateRestuarantRequestBO(), cancellationToken);
 
             return CreatedAtAction(nameof(GetRestuarantAsync), new { id = restuarant.Id }, restuarant);
@@ -115,7 +114,7 @@ public class RestuarantsController
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IResult> CreateManyRestuarantsAsync([FromBody] CreateRestuarantRequest[] requests, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Add restuarant request received");
+        Logger.LogInformation("Add restuarant request received");
         CreateRestuarantRequestBO[] requestBOs = [.. requests.Select(_ => _.ToCreateRestuarantRequestBO())];
         var results = await _orchestration.CreateManyRestuarantsAsync(requestBOs, cancellationToken);
 
@@ -135,7 +134,7 @@ public class RestuarantsController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> UpdateRestuarantAsync([FromRoute] string id, [FromBody] UpdateRestuarantRequest request, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Update restuarant request received");
+        Logger.LogInformation("Update restuarant request received");
         TransactionResult results = await _orchestration.UpdateRestuarantAsync(id, request.ToUpdateRestuarantRequestBO(), cancellationToken);
 
         return TypedResults.Ok(results);
@@ -154,7 +153,7 @@ public class RestuarantsController
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IResult> UpdateRestuarantLocationAsync([FromRoute] string id, [FromBody] UpdateLocationRequest request, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Update restuarant location request received");
+        Logger.LogInformation("Update restuarant location request received");
         TransactionResult results = await _orchestration.UpdateRestuarantLocationAsync(id, request.ToUpdateLocationRequestBO(), cancellationToken);
 
         return TypedResults.Ok(results);
@@ -170,7 +169,7 @@ public class RestuarantsController
     [ProducesResponseType(StatusCodes.Status200OK)]
     public async Task<IResult> RemoveRestuarantAsync([FromRoute] string id, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Remove restuarant request received");
+        Logger.LogInformation("Remove restuarant request received");
         bool success = await _orchestration.RemoveRestuarantAsync(id, cancellationToken);
 
         return TypedResults.Ok(success);

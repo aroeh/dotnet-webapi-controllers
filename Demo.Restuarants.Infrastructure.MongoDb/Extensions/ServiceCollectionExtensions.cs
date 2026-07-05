@@ -4,6 +4,8 @@ using Demo.Restuarants.Infrastructure.MongoDb.Options;
 using Demo.Restuarants.Infrastructure.MongoDb.Repos;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Demo.Restuarants.Infrastructure.MongoDb.Extensions;
 
@@ -11,10 +13,10 @@ public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddInfrastructureRepos(this IServiceCollection services, IConfiguration config)
     {
-        services.AddScoped<IMongoDbRepo<RestuarantDocument>, MongoDbRepo<RestuarantDocument>>();
-        services.AddScoped<IRestuarantRepo, RestuarantRepo>();
-
         GetOptions(services, config);
+
+        services.AddMongoDbFactory<RestuarantDocument>("restuarants");
+        services.AddScoped<IRestuarantRepo, RestuarantRepo>();
 
         return services;
     }
@@ -39,5 +41,15 @@ public static class ServiceCollectionExtensions
         }
 
         services.Configure<MongoDbOptions>(configSettings);
+    }
+
+    private static void AddMongoDbFactory<T>(this IServiceCollection services, string collectionName) where T : class
+    {
+        services.AddScoped<IMongoDbRepo<T>, MongoDbRepo<T>>(sp =>
+        {
+            ILogger<MongoDbRepo<T>> logger = sp.GetRequiredService<ILogger<MongoDbRepo<T>>>();
+            IOptions<MongoDbOptions> options = sp.GetRequiredService<IOptions<MongoDbOptions>>();
+            return new MongoDbRepo<T>(logger, options, collectionName);
+        });
     }
 }
